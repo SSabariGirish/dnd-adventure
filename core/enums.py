@@ -5,7 +5,7 @@ class Species(Enum):
     HUMAN = (2, 1, 1, 2)
     ELF = (-2, 3, 4, 1)
     DWARF = (5, -2, -2, 2)
-    DEMON = (3, 2, -5, 4)
+    DEMON = (3, 2, -4, 4)
 
     def __init__(self, strength: int, intelligence: int, dexterity: int, deception: int):
         self.strength = strength
