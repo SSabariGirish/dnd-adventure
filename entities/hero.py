@@ -1,8 +1,10 @@
 from core.enums import Species
+from core.weapons import Weapon
+from core.armour import Armour
 
 class Hero:
 
-    def __init__(self, species: Species, name: str, weapon: str, armour: str, max_health: int):
+    def __init__(self, species: Species, name: str, weapon: Weapon, armour: Armour, max_health: int):
         self._species = species
         self._name = name
         self._weapon = weapon
@@ -10,10 +12,10 @@ class Hero:
         self._max_health = max_health
 
         #Base stats
-        self.strength = self._species.value[0]
-        self.intelligence = self._species.value[1]
-        self.dexterity = self._species.value[2]
-        self.deception = self._species.value[3]
+        self.strength = species.strength
+        self.intelligence = species.intelligence
+        self.dexterity = species.dexterity
+        self.deception = species.deception
         self.cur_health = 0
                         
 
