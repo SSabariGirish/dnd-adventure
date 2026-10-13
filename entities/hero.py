@@ -25,7 +25,7 @@ class Hero:
 
     def take_damage(self, damage: int) -> None:
         """Reduces cur_health by amount, capped at 0."""
-        if damage <= 0:
+        if damage < 0:
             raise Exception("Invalid damage amount")
         self.cur_health -= damage
         self.cur_health = max(0, self.cur_health)
