@@ -26,21 +26,19 @@ class Hero:
     def take_damage(self, damage: int) -> None:
         """Reduces cur_health by amount, capped at 0."""
         if damage < 0:
-            raise Exception("Invalid damage amount")
+            raise ValueError("Invalid damage amount")
         self.cur_health -= damage
         self.cur_health = max(0, self.cur_health)
 
     def heal(self, heal_amt: int) -> None:
         if heal_amt <= 0:
-            raise Exception("Invalid heal amount")
+            raise ValueError("Invalid heal amount")
         
         self.cur_health += heal_amt
         self.cur_health = min(self._max_health, self.cur_health)
 
     def is_alive(self) -> bool:
-        if self.cur_health:
-            return True
-        return False
+        return self.cur_health > 0
 
     def calculate_damage(self) -> int:
         """
