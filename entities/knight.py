@@ -1,4 +1,4 @@
-from hero import Hero
+from .hero import Hero
 from core.enums import Species
 from core.weapons import Weapon
 from core.armour import Armour
@@ -21,7 +21,6 @@ class Knight(Hero):
     def take_damage(self, damage: int):
         if self.shield_block:
             damage = damage // 2
-            self.shield_block = False
         
         damage = max(0, damage - self._armour.defence)
         super().take_damage(damage)
@@ -37,4 +36,4 @@ class Knight(Hero):
 
     def raise_shield(self):
         self.shield_block = True
-        print(f"{self.name} raises their shield!")
+        print(f"{self._name} raises their shield!")

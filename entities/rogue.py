@@ -1,4 +1,4 @@
-from hero import Hero
+from .hero import Hero
 from core.enums import Species
 from core.weapons import Weapon
 from core.armour import Armour

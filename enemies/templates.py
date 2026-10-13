@@ -66,7 +66,7 @@ def spawn_enemy(enemy_id: str) -> Enemy:
 
     enemy_template = ENEMY_TEMPLATES[enemy_id]
 
-    return EnemyTemplate(
+    return Enemy(
         name=enemy_template.name,
         max_health=enemy_template.max_health,
         damage=enemy_template.damage,
