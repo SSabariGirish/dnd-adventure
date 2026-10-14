@@ -29,6 +29,7 @@ class Hero:
             raise ValueError("Invalid damage amount")
         self.cur_health -= damage
         self.cur_health = max(0, self.cur_health)
+        print(f"{self._name} has taken {damage} damage")
 
     def heal(self, heal_amt: int) -> None:
         if heal_amt <= 0:
@@ -39,6 +40,9 @@ class Hero:
 
     def is_alive(self) -> bool:
         return self.cur_health > 0
+
+    def get_name(self) -> str:
+        return self._name
 
     def calculate_damage(self) -> int:
         """

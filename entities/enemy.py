@@ -1,6 +1,6 @@
 from .hero import Hero
 
-class Enemy:
+class Enemy(Hero):
 
     def __init__(self, name: str, max_health: int, damage: int, defence: int, xp_reward: int):
         self._name = name
@@ -24,6 +24,8 @@ class Enemy:
             self._cur_health - actual_damage
         )
 
+        print(f"{self._name} has taken {actual_damage} damage")
+
     def heal(self, heal_amt: int):
         if heal_amt < 0:
             raise ValueError("Healing amount should not be negative")
@@ -37,5 +39,6 @@ class Enemy:
         return self._cur_health > 0
 
     def attack(self, target: Hero):
+        print(f"{self._name} has mauled {target.get_name()}")
         target.take_damage(self._damage)
     

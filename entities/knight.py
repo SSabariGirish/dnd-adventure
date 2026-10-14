@@ -31,9 +31,38 @@ class Knight(Hero):
     def attack(self, target: Hero):
         self.shield_block = False
         damage = self.calculate_damage()
+        print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
-        print(f"{self._name} uses {self._weapon.display_name} and attacks for {damage} damage")
 
     def raise_shield(self):
         self.shield_block = True
         print(f"{self._name} raises their shield!")
+
+    def __str__(self) -> str:
+        """Returns a formatted character sheet for the CLI."""
+        return f"""
+    ===========================================
+                  CHARACTER SHEET
+    ===========================================
+        Name:           {self._name.upper()}
+        Species:        {self._species.name}
+        Class:          KNIGHT
+
+    HEALTH
+        Maximum Health: {self._max_health}
+        Current Health: {self.cur_health}
+
+    ATTRIBUTES
+        Strength:       {self.strength}
+        Intelligence:   {self.intelligence}
+        Dexterity:      {self.dexterity}
+        Deception:      {self.deception}
+
+    EQUIPMENT
+        Weapon:         {self._weapon.display_name}
+        Weapon Damage:  {self._weapon.damage}
+        Armour:         {self._armour.display_name}
+        Armour Defence: {self._armour.defence}
+
+    ===========================================
+    """
