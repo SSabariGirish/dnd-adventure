@@ -17,6 +17,7 @@ class Knight(Hero):
         self.dexterity += 5
         self.deception += 4
         self.max_mana = 10 + (self.intelligence * 2)
+        self.cur_mana = self.max_mana
         
 
     def take_damage(self, damage: int):

@@ -18,6 +18,7 @@ class Rogue(Hero):
         self.dexterity += 8
         self.deception += 5
         self.max_mana = 20 + (self.intelligence * 2)
+        self.cur_mana = self.max_mana
 
     def raise_evasion(self):
         mana_cost = 10
