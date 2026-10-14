@@ -31,8 +31,8 @@ class Knight(Hero):
     def attack(self, target: Hero):
         self.shield_block = False
         damage = self.calculate_damage()
+        print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
-        print(f"{self._name} uses {self._weapon.display_name} and attacks for {damage} damage")
 
     def raise_shield(self):
         self.shield_block = True

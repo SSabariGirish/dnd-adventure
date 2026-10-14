@@ -83,6 +83,7 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
             raise ValueError("Invalid Option")
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
+    print(hero)
     action_choice = get_player_action(hero)
     
     match action_choice:
@@ -91,7 +92,7 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
         case 2:
             if isinstance(hero, Knight):
                 hero.raise_shield()
-            else:
+            elif isinstance(hero, Mage):
                 hero.cast_spell(enemy)
     
     enemy.attack(hero)

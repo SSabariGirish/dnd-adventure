@@ -22,18 +22,17 @@ class Rogue(Hero):
 
         if random.random() <= dodge_chance:
             print(f"{self._name} dodged the attack!")
-            return
-
-        damage = max(0, damage - self._armour.defence)
-        super().take_damage(damage)
+        else:
+            damage = max(0, damage - self._armour.defence)
+            super().take_damage(damage)
 
     def calculate_damage(self) -> int:
         return self._weapon.damage + self.strength
     
     def attack(self, target: Hero):
         damage = self.calculate_damage()
+        print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
-        print(f"{self._name} slices {target.get_name()} for {damage} damage")
 
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""

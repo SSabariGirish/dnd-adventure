@@ -30,8 +30,8 @@ class Mage(Hero):
     
     def attack(self, target: Hero):
         damage = self.calculate_damage()
+        print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
-        print(f"{self._name} swings at {target.get_name()} for {damage} damage")
 
     def cast_spell(self, target: Hero):
         mana_cost = 10
