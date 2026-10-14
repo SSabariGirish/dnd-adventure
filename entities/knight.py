@@ -42,7 +42,7 @@ class Knight(Hero):
         """Returns a formatted character sheet for the CLI."""
         return f"""
     ===========================================
-                CHARACTER SHEET
+                  CHARACTER SHEET
     ===========================================
         Name:           {self._name.upper()}
         Species:        {self._species.name}

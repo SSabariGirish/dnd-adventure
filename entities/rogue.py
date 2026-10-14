@@ -34,3 +34,31 @@ class Rogue(Hero):
         damage = self.calculate_damage()
         target.take_damage(damage)
 
+    def __str__(self) -> str:
+        """Returns a formatted character sheet for the CLI."""
+        return f"""
+    ===========================================
+                  CHARACTER SHEET
+    ===========================================
+        Name:           {self._name.upper()}
+        Species:        {self._species.name}
+        Class:          ROGUE
+
+    HEALTH
+        Maximum Health: {self._max_health}
+        Current Health: {self.cur_health}
+
+    ATTRIBUTES
+        Strength:       {self.strength}
+        Intelligence:   {self.intelligence}
+        Dexterity:      {self.dexterity}
+        Deception:      {self.deception}
+
+    EQUIPMENT
+        Weapon:         {self._weapon.display_name}
+        Weapon Damage:  {self._weapon.damage}
+        Armour:         {self._armour.display_name}
+        Armour Defence: {self._armour.defence}
+
+    ===========================================
+    """

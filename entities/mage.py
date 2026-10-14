@@ -45,3 +45,32 @@ class Mage(Hero):
         target.take_damage(damage)
 
         print(f"{self._name} casts Arcane bolt for {damage} damage")
+
+    def __str__(self) -> str:
+        """Returns a formatted character sheet for the CLI."""
+        return f"""
+        ===========================================
+                      CHARACTER SHEET
+        ===========================================
+            Name:           {self._name.upper()}
+            Species:        {self._species.name}
+            Class:          MAGE
+    
+        HEALTH
+            Maximum Health: {self._max_health}
+            Current Health: {self.cur_health}
+    
+        ATTRIBUTES
+            Strength:       {self.strength}
+            Intelligence:   {self.intelligence}
+            Dexterity:      {self.dexterity}
+            Deception:      {self.deception}
+    
+        EQUIPMENT
+            Weapon:         {self._weapon.display_name}
+            Weapon Damage:  {self._weapon.damage}
+            Armour:         {self._armour.display_name}
+            Armour Defence: {self._armour.defence}
+    
+        ===========================================
+        """
