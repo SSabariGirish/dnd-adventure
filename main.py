@@ -70,9 +70,11 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("===========================================")
     print("1) ATTACK")
     if isinstance(hero, Knight):
-        print("2) RAISE SHIELD")
+        print("2) RAISE HOLY SHIELD")
     elif isinstance(hero, Mage):
         print("2) CAST SPELL")
+    else:
+        print("2) RAISE EVASION")
 
     choice = int(input("Choose your action\n"))
 
@@ -95,7 +97,9 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
             elif isinstance(hero, Mage):
                 hero.cast_spell(enemy)
     
-    enemy.attack(hero)
+    if enemy.is_alive():
+        enemy.attack(hero)
+    
     clear_screen()
 
 

@@ -7,8 +7,6 @@ class Mage(Hero):
 
     def __init__(self, species: Species, name: str):
         super().__init__(species, name, Weapon.APPRENTICE_STAFF, Armour.APPRENTICES_ROBES, 50)
-        self.cur_mana = 0
-        self.max_mana = 0
         self.set_stats()
         
     def set_stats(self):

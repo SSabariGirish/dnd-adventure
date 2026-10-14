@@ -8,6 +8,7 @@ class Rogue(Hero):
 
     def __init__(self, species: Species, name: str):
         super().__init__(species, name, Weapon.IRON_DAGGER, Armour.LEATHER_ARMOUR, 75)
+        self._evasion = 0.20
         self.set_stats()
     
     def set_stats(self):
@@ -16,11 +17,22 @@ class Rogue(Hero):
         self.intelligence += 4
         self.dexterity += 8
         self.deception += 5
+        self.max_mana = 20 + (self.intelligence * 2)
 
+    def raise_evasion(self):
+        mana_cost = 10
+        if self.cur_mana < mana_cost:
+                print('Not enough mana to raise evasion')
+                return
+        
+        self.cur_mana -= mana_cost
+        self._evasion = 0.40
+
+        print(f"{self._name} has become more nimble")
+        
     def take_damage(self, damage: int):
-        dodge_chance = 0.25
-
-        if random.random() <= dodge_chance:
+        
+        if random.random() <= self._evasion:
             print(f"{self._name} dodged the attack!")
         else:
             damage = max(0, damage - self._armour.defence)
@@ -30,6 +42,7 @@ class Rogue(Hero):
         return self._weapon.damage + self.strength
     
     def attack(self, target: Hero):
+        self._evasion = 0.20
         damage = self.calculate_damage()
         print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
@@ -44,9 +57,11 @@ class Rogue(Hero):
         Species:        {self._species.name}
         Class:          ROGUE
 
-    HEALTH
+    HEALTH & MANA
         Maximum Health: {self._max_health}
         Current Health: {self.cur_health}
+        Maximum Mana:   {self.max_mana}
+        Current Mana:   {self.cur_mana}
 
     ATTRIBUTES
         Strength:       {self.strength}

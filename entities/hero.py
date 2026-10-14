@@ -10,6 +10,8 @@ class Hero:
         self._weapon = weapon
         self._armour = armour
         self._max_health = max_health
+        self.max_mana = 0
+        self.cur_mana = 0
 
         #Base stats
         self.strength = species.strength
