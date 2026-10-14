@@ -31,6 +31,7 @@ class Mage(Hero):
     def attack(self, target: Hero):
         damage = self.calculate_damage()
         target.take_damage(damage)
+        print(f"{self._name} swings at {target.get_name()} for {damage} damage")
 
     def cast_spell(self, target: Hero):
         mana_cost = 10
@@ -56,9 +57,11 @@ class Mage(Hero):
             Species:        {self._species.name}
             Class:          MAGE
     
-        HEALTH
+        HEALTH & MANA
             Maximum Health: {self._max_health}
             Current Health: {self.cur_health}
+            Maximum Mana:   {self.max_mana}
+            Current Mana:   {self.cur_mana}
     
         ATTRIBUTES
             Strength:       {self.strength}

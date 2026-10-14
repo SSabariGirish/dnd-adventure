@@ -1,6 +1,6 @@
 from .hero import Hero
 
-class Enemy:
+class Enemy(Hero):
 
     def __init__(self, name: str, max_health: int, damage: int, defence: int, xp_reward: int):
         self._name = name
@@ -38,4 +38,5 @@ class Enemy:
 
     def attack(self, target: Hero):
         target.take_damage(self._damage)
+        print(f"{self._name} has mauled {target.get_name()} for {self._damage} damage")
     

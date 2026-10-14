@@ -1,9 +1,17 @@
+import os
+
 from entities.knight import Knight
 from entities.mage import Mage
 from entities.rogue import Rogue
 from entities.hero import Hero
 from entities.enemy import Enemy
 from core.enums import Species
+
+from enemies.templates import spawn_enemy
+
+def clear_screen():
+    input("\nPress Enter to continue...")
+    os.system("cls" if os.name == "nt" else "clear")
 
 #Creating the Hero character
 def create_hero() -> list:
@@ -56,14 +64,43 @@ def create_hero() -> list:
 
     return info_list
 
-def get_player_action(hero: Knight | Mage | Rogue):
-    pass
+def get_player_action(hero: Knight | Mage | Rogue) -> int:
+    print("===========================================")
+    print("         What are you Going to Do?         ")
+    print("===========================================")
+    print("1) ATTACK")
+    if isinstance(hero, Knight):
+        print("2) RAISE SHIELD")
+    elif isinstance(hero, Mage):
+        print("2) CAST SPELL")
+
+    choice = int(input("Choose your action\n"))
+
+    match choice:
+        case 1 | 2:
+            return choice
+        case _:
+            raise ValueError("Invalid Option")
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
-    pass
+    action_choice = get_player_action(hero)
+    
+    match action_choice:
+        case 1:
+            hero.attack(enemy)
+        case 2:
+            if isinstance(hero, Knight):
+                hero.raise_shield()
+            else:
+                hero.cast_spell(enemy)
+    
+    enemy.attack(hero)
+    clear_screen()
+
 
 def main():
     choices = create_hero()
+
     match choices[2]:
         case 'Knight':
             hero = Knight(choices[1], choices[0])
@@ -72,6 +109,16 @@ def main():
         case 'Mage':
             hero = Mage(choices[1], choices[0])
     print(hero)
+
+    while hero.is_alive():
+        cur_enemy = spawn_enemy('gnoll')
+        combat(hero, cur_enemy)
+        
+        if not cur_enemy.is_alive():
+            print(f"{hero.get_name()} has slain {cur_enemy.get_name()}")
+
+        if not hero.is_alive():
+            print(f"{hero.get_name()} has courageously fallen in battle and will not be forgotten")
 
 if __name__=="__main__":
     main()

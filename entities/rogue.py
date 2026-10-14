@@ -33,6 +33,7 @@ class Rogue(Hero):
     def attack(self, target: Hero):
         damage = self.calculate_damage()
         target.take_damage(damage)
+        print(f"{self._name} slices {target.get_name()} for {damage} damage")
 
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""

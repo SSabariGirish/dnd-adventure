@@ -40,6 +40,9 @@ class Hero:
     def is_alive(self) -> bool:
         return self.cur_health > 0
 
+    def get_name(self) -> str:
+        return self._name
+
     def calculate_damage(self) -> int:
         """
         Returns raw damage output. 
