@@ -2,6 +2,7 @@ from entities.knight import Knight
 from entities.mage import Mage
 from entities.rogue import Rogue
 from entities.hero import Hero
+from entities.enemy import Enemy
 from core.enums import Species
 
 #Creating the Hero character
@@ -55,10 +56,22 @@ def create_hero() -> list:
 
     return info_list
 
+def get_player_action(hero: Knight | Mage | Rogue):
+    pass
+
+def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
+    pass
 
 def main():
     choices = create_hero()
-    print(choices)
+    match choices[2]:
+        case 'Knight':
+            hero = Knight(choices[1], choices[0])
+        case 'Rogue':
+            hero = Rogue(choices[1], choices[0])
+        case 'Mage':
+            hero = Mage(choices[1], choices[0])
+    print(hero)
 
 if __name__=="__main__":
     main()
