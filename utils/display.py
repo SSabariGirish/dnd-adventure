@@ -13,14 +13,16 @@ def display_bar(current: int, maximum: int, width: int = 20) -> str:
 
 def show_status(hero: Hero) -> str:
     return f"""
-    ===========================================
-                  CHARACTER SHEET
-    ===========================================
-        Name:           {hero.get_name().upper()}
-        Class:          {type(hero).__name__.upper()}    
+===========================================
+              CHARACTER SHEET
+===========================================
+    Name:           {hero.get_name().upper()}
+    Class:          {type(hero).__name__.upper()}    
 
-    HEALTH & MANA
-        Current Health:  {display_bar(hero.cur_health, hero.get_max_health())}\n
-        Current Mana:    {display_bar(hero.cur_mana, hero.get_max_mana())}   
+HEALTH & MANA\n
+    Current Health: {hero.cur_health} / {hero.get_max_health()}\n  
+                    {display_bar(hero.cur_health, hero.get_max_health())}\n\n
+    Current Mana:   {hero.cur_mana} / {hero.get_max_mana()}\n
+                    {display_bar(hero.cur_mana, hero.get_max_mana())}   
         
     """
