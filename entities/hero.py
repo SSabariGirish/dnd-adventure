@@ -23,6 +23,8 @@ class Hero:
         self.dexterity = species.dexterity
         self.deception = species.deception
         self.cur_health = 0
+        self.level = 1
+        self.xp = 0
                         
 
     def set_stats(self):

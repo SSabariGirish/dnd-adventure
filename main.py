@@ -172,7 +172,8 @@ def main():
         
         if not cur_enemy.is_alive():
             spawn_now = True
-            print(f"{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+            print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+            hero.xp += cur_enemy.get_xp_reward()
             del cur_enemy
             print("A new enemy shall approach the hero soon!")
 
