@@ -6,6 +6,7 @@ from entities.rogue import Rogue
 from entities.hero import Hero
 from entities.enemy import Enemy
 from core.enums import Species
+from utils.display import show_status
 
 from enemies.templates import spawn_enemy
 
@@ -70,9 +71,11 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("===========================================")
     print("1) ATTACK")
     if isinstance(hero, Knight):
-        print("2) RAISE SHIELD")
+        print("2) RAISE HOLY SHIELD")
     elif isinstance(hero, Mage):
         print("2) CAST SPELL")
+    else:
+        print("2) RAISE EVASION")
 
     choice = int(input("Choose your action\n"))
 
@@ -83,7 +86,8 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
             raise ValueError("Invalid Option")
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
-    print(hero)
+    current_status = show_status(hero)
+    print(current_status)
     action_choice = get_player_action(hero)
     
     match action_choice:
@@ -94,10 +98,12 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                 hero.raise_shield()
             elif isinstance(hero, Mage):
                 hero.cast_spell(enemy)
+            elif isinstance(hero, Rogue):
+                hero.raise_evasion()
     
-    enemy.attack(hero)
-    clear_screen()
-
+    if enemy.is_alive():
+        enemy.attack(hero)
+        
 
 def main():
     choices = create_hero()
@@ -110,16 +116,29 @@ def main():
         case 'Mage':
             hero = Mage(choices[1], choices[0])
     print(hero)
+    clear_screen()
+    spawn_now = True
 
     while hero.is_alive():
-        cur_enemy = spawn_enemy('gnoll')
+        
+        if spawn_now:    
+            cur_enemy = spawn_enemy('gnoll')
+            spawn_now = False
+        
         combat(hero, cur_enemy)
         
-        if not cur_enemy.is_alive():
-            print(f"{hero.get_name()} has slain {cur_enemy.get_name()}")
 
         if not hero.is_alive():
             print(f"{hero.get_name()} has courageously fallen in battle and will not be forgotten")
+            clear_screen()
+        
+        if not cur_enemy.is_alive():
+            spawn_now = True
+            print(f"{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+            del cur_enemy
+            print("A new enemy shall approach the hero soon!")
+
+        clear_screen()
 
 if __name__=="__main__":
     main()

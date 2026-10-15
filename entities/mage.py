@@ -7,8 +7,6 @@ class Mage(Hero):
 
     def __init__(self, species: Species, name: str):
         super().__init__(species, name, Weapon.APPRENTICE_STAFF, Armour.APPRENTICES_ROBES, 50)
-        self.cur_mana = 0
-        self.max_mana = 0
         self.set_stats()
         
     def set_stats(self):
@@ -17,8 +15,8 @@ class Mage(Hero):
         self.intelligence += 10
         self.dexterity += 4
         self.deception += 4
-        self.max_mana = 30 + (self.intelligence * 2)
-        self.cur_mana = self.max_mana
+        self._max_mana = 30 + (self.intelligence * 2)
+        self.cur_mana = self._max_mana
             
 
     def take_damage(self, damage: int):
@@ -43,9 +41,9 @@ class Mage(Hero):
         self.cur_mana -= mana_cost
 
         damage = self._weapon.damage + (self.intelligence * 2)
+        print(f"{self._name} casts Arcane bolt at {target.get_name()}")
+        
         target.take_damage(damage)
-
-        print(f"{self._name} casts Arcane bolt for {damage} damage")
 
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""
@@ -60,7 +58,7 @@ class Mage(Hero):
         HEALTH & MANA
             Maximum Health: {self._max_health}
             Current Health: {self.cur_health}
-            Maximum Mana:   {self.max_mana}
+            Maximum Mana:   {self._max_mana}
             Current Mana:   {self.cur_mana}
     
         ATTRIBUTES

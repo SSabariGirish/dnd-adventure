@@ -16,6 +16,8 @@ class Knight(Hero):
         self.intelligence += 3
         self.dexterity += 5
         self.deception += 4
+        self._max_mana = 10 + (self.intelligence * 2)
+        self.cur_mana = self._max_mana
         
 
     def take_damage(self, damage: int):
@@ -35,6 +37,14 @@ class Knight(Hero):
         target.take_damage(damage)
 
     def raise_shield(self):
+        mana_cost = 10
+        
+        if self.cur_mana < mana_cost:
+                print('Not enough mana to raise holy shield')
+                return
+        
+        self.cur_mana -= mana_cost
+                
         self.shield_block = True
         print(f"{self._name} raises their shield!")
 
@@ -48,9 +58,11 @@ class Knight(Hero):
         Species:        {self._species.name}
         Class:          KNIGHT
 
-    HEALTH
+    HEALTH & MANA
         Maximum Health: {self._max_health}
         Current Health: {self.cur_health}
+        Maximum Mana:   {self._max_mana}
+        Current Mana:   {self.cur_mana}
 
     ATTRIBUTES
         Strength:       {self.strength}
