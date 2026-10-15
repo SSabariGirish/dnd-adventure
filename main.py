@@ -76,37 +76,74 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
         print("2) CAST SPELL")
     else:
         print("2) RAISE EVASION")
+    print("3) CONSUME HEALTH ELIXIR")
+    print("4) CONSUME MANA ELIXIR")
+    if isinstance(hero, Rogue):
+        print(f"5) SWITCH STANCE - (current stance = {hero.get_stance()})")
 
     choice = int(input("Choose your action\n"))
+    if isinstance(hero, Rogue):
+        valid_choices = list(range(1, 6))
+    else:
+        valid_choices = list(range(1, 5))
 
-    match choice:
-        case 1 | 2:
-            return choice
-        case _:
-            raise ValueError("Invalid Option")
+    if choice not in valid_choices:
+        raise ValueError("Invalid Option")
+
+    return choice
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
     current_status = show_status(hero)
-    print(current_status)
-    action_choice = get_player_action(hero)
+
+    while True:
+        try:
+            print(current_status)
+            action_choice = get_player_action(hero)
+            
+            res = True
+
+            match action_choice:
+                case 1:
+                    hero.attack(enemy)
+                case 2:
+                    if isinstance(hero, Knight):
+                        res = hero.raise_shield()
+                    elif isinstance(hero, Mage):
+                        res = hero.cast_spell(enemy)
+                    elif isinstance(hero, Rogue):
+                        res = hero.raise_evasion()
+                case 3:
+                    res = hero.consume_healing_potion()
+                case 4:
+                    res = hero.consume_mana_potion()
+                case 5:
+                    if not isinstance(hero, Rogue):
+                        raise ValueError("Invalid Option")
+                    else:
+                        res = hero.switch_stance()
+
+            if res:
+                if enemy.is_alive():
+                    enemy.attack(hero)
+            
+            break
+
+        except ValueError as v:
+            print(v)
+            clear_screen()
     
-    match action_choice:
-        case 1:
-            hero.attack(enemy)
-        case 2:
-            if isinstance(hero, Knight):
-                hero.raise_shield()
-            elif isinstance(hero, Mage):
-                hero.cast_spell(enemy)
-            elif isinstance(hero, Rogue):
-                hero.raise_evasion()
     
-    if enemy.is_alive():
-        enemy.attack(hero)
         
 
 def main():
-    choices = create_hero()
+    invalid = True
+    while invalid:
+        try:
+            choices = create_hero()
+            invalid = False
+        except ValueError as v:
+            print(v)
+            clear_screen()
 
     match choices[2]:
         case 'Knight':
@@ -115,6 +152,7 @@ def main():
             hero = Rogue(choices[1], choices[0])
         case 'Mage':
             hero = Mage(choices[1], choices[0])
+    clear_screen()
     print(hero)
     clear_screen()
     spawn_now = True
@@ -134,7 +172,8 @@ def main():
         
         if not cur_enemy.is_alive():
             spawn_now = True
-            print(f"{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+            print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+            hero.xp += cur_enemy.get_xp_reward()
             del cur_enemy
             print("A new enemy shall approach the hero soon!")
 

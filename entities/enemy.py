@@ -38,6 +38,9 @@ class Enemy(Hero):
     def is_alive(self) -> bool:
         return self._cur_health > 0
 
+    def get_xp_reward(self) -> int:
+        return self._xp_reward
+
     def attack(self, target: Hero):
         print(f"{self._name} has mauled {target.get_name()}")
         target.take_damage(self._damage)

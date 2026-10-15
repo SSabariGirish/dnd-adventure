@@ -36,17 +36,19 @@ class Knight(Hero):
         print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
 
-    def raise_shield(self):
+    def raise_shield(self) -> bool:
         mana_cost = 10
         
         if self.cur_mana < mana_cost:
                 print('Not enough mana to raise holy shield')
-                return
+                print('Spell failed')
+                return False
         
         self.cur_mana -= mana_cost
                 
         self.shield_block = True
         print(f"{self._name} raises their shield!")
+        return True
 
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""

@@ -31,12 +31,13 @@ class Mage(Hero):
         print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
 
-    def cast_spell(self, target: Hero):
+    def cast_spell(self, target: Hero) -> bool:
         mana_cost = 10
 
         if self.cur_mana < mana_cost:
             print('Not enough mana to cast a spell')
-            return
+            print('Spell failed')
+            return False
 
         self.cur_mana -= mana_cost
 
@@ -44,6 +45,7 @@ class Mage(Hero):
         print(f"{self._name} casts Arcane bolt at {target.get_name()}")
         
         target.take_damage(damage)
+        return True
 
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""

@@ -9,6 +9,7 @@ class Rogue(Hero):
     def __init__(self, species: Species, name: str):
         super().__init__(species, name, Weapon.IRON_DAGGER, Armour.LEATHER_ARMOUR, 75)
         self._evasion = 0.20
+        self._stance = "MELEE"
         self.set_stats()
     
     def set_stats(self):
@@ -20,16 +21,21 @@ class Rogue(Hero):
         self._max_mana = 20 + (self.intelligence * 2)
         self.cur_mana = self._max_mana
 
-    def raise_evasion(self):
+    def get_stance(self) -> str:
+        return self._stance
+
+    def raise_evasion(self) -> bool:
         mana_cost = 10
         if self.cur_mana < mana_cost:
                 print('Not enough mana to raise evasion')
-                return
+                print('Spell failed')
+                return False
         
         self.cur_mana -= mana_cost
         self._evasion = 0.40
 
         print(f"{self._name} has become more nimble")
+        return True
         
     def take_damage(self, damage: int):
         
@@ -40,10 +46,32 @@ class Rogue(Hero):
             super().take_damage(damage)
 
     def calculate_damage(self) -> int:
-        return self._weapon.damage + self.strength
+        if self._stance == 'MELEE':
+            return self._weapon.damage + self.strength
+        else:
+            return 5
+
+    def switch_stance(self) -> bool:
+        if self._stance == 'MELEE':
+            self._stance = 'RANGED'
+            if self._evasion == 0.40:
+                self._evasion = 0.70
+            else:
+                self._evasion = 0.35
+        else:
+            self._stance = 'MELEE'
+            if self._evasion == 0.70:
+                self._evasion = 0.40
+            else:
+                self._evasion = 0.2
+        return True
+            
     
     def attack(self, target: Hero):
-        self._evasion = 0.20
+        if self._evasion == 0.4:
+            self._evasion = 0.20
+        else:
+            self._evasion = 0.35
         damage = self.calculate_damage()
         print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
