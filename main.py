@@ -6,6 +6,7 @@ from entities.rogue import Rogue
 from entities.hero import Hero
 from entities.enemy import Enemy
 from core.enums import Species
+from utils.display import show_status
 
 from enemies.templates import spawn_enemy
 
@@ -85,7 +86,8 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
             raise ValueError("Invalid Option")
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
-    print(hero)
+    current_status = show_status(hero)
+    print(current_status)
     action_choice = get_player_action(hero)
     
     match action_choice:
@@ -96,9 +98,13 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                 hero.raise_shield()
             elif isinstance(hero, Mage):
                 hero.cast_spell(enemy)
+            elif isinstance(hero, Rogue):
+                hero.raise_evasion()
     
     if enemy.is_alive():
         enemy.attack(hero)
+    else:
+        print(f"{enemy.get_name()} has been slain by {hero.get_name()}")
     
     clear_screen()
 
@@ -114,6 +120,7 @@ def main():
         case 'Mage':
             hero = Mage(choices[1], choices[0])
     print(hero)
+    clear_screen()
 
     while hero.is_alive():
         cur_enemy = spawn_enemy('gnoll')
