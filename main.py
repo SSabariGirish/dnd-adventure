@@ -88,8 +88,16 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
     current_status = show_status(hero)
     print(current_status)
-    action_choice = get_player_action(hero)
-    
+
+    invalid = True
+    while invalid:
+        try:
+            action_choice = get_player_action(hero)
+            invalid = False 
+        except ValueError as v:
+            print(v)
+            clear_screen()
+
     match action_choice:
         case 1:
             hero.attack(enemy)
@@ -106,7 +114,14 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
         
 
 def main():
-    choices = create_hero()
+    invalid = True
+    while invalid:
+        try:
+            choices = create_hero()
+            invalid = False
+        except ValueError as v:
+            print(v)
+            clear_screen()
 
     match choices[2]:
         case 'Knight':

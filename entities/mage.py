@@ -36,6 +36,7 @@ class Mage(Hero):
 
         if self.cur_mana < mana_cost:
             print('Not enough mana to cast a spell')
+            print('Spell failed')
             return
 
         self.cur_mana -= mana_cost

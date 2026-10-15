@@ -24,6 +24,7 @@ class Rogue(Hero):
         mana_cost = 10
         if self.cur_mana < mana_cost:
                 print('Not enough mana to raise evasion')
+                print('Spell failed')
                 return
         
         self.cur_mana -= mana_cost

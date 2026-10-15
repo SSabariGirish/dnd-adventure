@@ -41,6 +41,7 @@ class Knight(Hero):
         
         if self.cur_mana < mana_cost:
                 print('Not enough mana to raise holy shield')
+                print('Spell failed')
                 return
         
         self.cur_mana -= mana_cost
