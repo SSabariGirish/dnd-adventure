@@ -16,8 +16,8 @@ class Knight(Hero):
         self.intelligence += 3
         self.dexterity += 5
         self.deception += 4
-        self.max_mana = 10 + (self.intelligence * 2)
-        self.cur_mana = self.max_mana
+        self._max_mana = 10 + (self.intelligence * 2)
+        self.cur_mana = self._max_mana
         
 
     def take_damage(self, damage: int):
@@ -61,7 +61,7 @@ class Knight(Hero):
     HEALTH & MANA
         Maximum Health: {self._max_health}
         Current Health: {self.cur_health}
-        Maximum Mana:   {self.max_mana}
+        Maximum Mana:   {self._max_mana}
         Current Mana:   {self.cur_mana}
 
     ATTRIBUTES

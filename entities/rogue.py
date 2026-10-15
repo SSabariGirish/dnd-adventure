@@ -17,8 +17,8 @@ class Rogue(Hero):
         self.intelligence += 4
         self.dexterity += 8
         self.deception += 5
-        self.max_mana = 20 + (self.intelligence * 2)
-        self.cur_mana = self.max_mana
+        self._max_mana = 20 + (self.intelligence * 2)
+        self.cur_mana = self._max_mana
 
     def raise_evasion(self):
         mana_cost = 10
@@ -61,7 +61,7 @@ class Rogue(Hero):
     HEALTH & MANA
         Maximum Health: {self._max_health}
         Current Health: {self.cur_health}
-        Maximum Mana:   {self.max_mana}
+        Maximum Mana:   {self._max_mana}
         Current Mana:   {self.cur_mana}
 
     ATTRIBUTES

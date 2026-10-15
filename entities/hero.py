@@ -10,7 +10,7 @@ class Hero:
         self._weapon = weapon
         self._armour = armour
         self._max_health = max_health
-        self.max_mana = 0
+        self._max_mana = 0
         self.cur_mana = 0
 
         #Base stats
@@ -45,6 +45,12 @@ class Hero:
 
     def get_name(self) -> str:
         return self._name
+
+    def get_max_mana(self) -> int:
+        return self._max_mana
+
+    def get_max_health(self) -> int:
+        return self._max_health
 
     def calculate_damage(self) -> int:
         """

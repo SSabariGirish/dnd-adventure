@@ -20,7 +20,7 @@ def show_status(hero: Hero) -> str:
         Class:          {type(hero).__name__.upper()}    
 
     HEALTH & MANA
-        Current Health:  {display_bar(hero.cur_health, hero._max_health)}\n
-        Current Mana:    {display_bar(hero.cur_mana, hero.max_mana)}   
+        Current Health:  {display_bar(hero.cur_health, hero.get_max_health())}\n
+        Current Mana:    {display_bar(hero.cur_mana, hero.get_max_mana())}   
         
     """
