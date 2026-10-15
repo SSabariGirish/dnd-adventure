@@ -12,6 +12,8 @@ class Hero:
         self._max_health = max_health
         self._max_mana = 0
         self.cur_mana = 0
+        self.healing_potion_inventory = ['Minor Healing Draught', 'Minor Healing Draught']
+        self.mana_potion_inventory = ['Minor Arcane Elixir', 'Minor Arcane Elixir']
 
         #Base stats
         self.strength = species.strength
@@ -39,6 +41,84 @@ class Hero:
         
         self.cur_health += heal_amt
         self.cur_health = min(self._max_health, self.cur_health)
+
+    def restore_mana(self, mana_amt: int) -> None:
+        if mana_amt < 0:
+            raise ValueError("invalid mana restoration amount")
+
+        self.cur_mana += mana_amt
+        self.cur_mana = min(self.cur_mana, self._max_mana)
+
+    def consume_healing_potion(self):
+        if len(self.healing_potion_inventory) == 0:
+            print("No healing potions available in the inventory")
+            return
+
+        while True:
+            print("===========================================")
+            print("         Healing Potion Inventory          ")
+            print("===========================================")
+
+            for i, potion in enumerate(self.healing_potion_inventory):
+                print(f"{i + 1}) {potion}")
+
+            try:
+                choice = int(input("         Choose Healing Potion          "))
+                choice -= 1
+
+                if choice not in range(len(self.healing_potion_inventory)):
+                    print("Selected option is not in range of healing potion inventory")
+                    continue
+
+                match self.healing_potion_inventory[choice]:
+                    case "Minor Healing Draught":
+                        self.heal(15)
+                    case "Concentrated Healing Draught":
+                        self.heal(45)
+                    case "Pure Vitality Draught":
+                        self.heal(self._max_health)
+
+                self.healing_potion_inventory.pop(choice)
+                break
+
+            except ValueError:
+                print("Please enter a valid number.")
+
+
+    def consume_mana_potion(self):
+        if len(self.mana_potion_inventory) == 0:
+            print("No mana potions available in the inventory")
+            return
+
+        while True:
+            print("===========================================")
+            print("           Mana Potion Inventory           ")
+            print("===========================================")
+
+            for i, potion in enumerate(self.mana_potion_inventory):
+                print(f"{i + 1}) {potion}")
+
+            try:
+                choice = int(input("           Choose Mana Potion           "))
+                choice -= 1
+
+                if choice not in range(len(self.mana_potion_inventory)):
+                    print("Selected option is not in range of mana potion inventory")
+                    continue
+
+                match self.mana_potion_inventory[choice]:
+                    case "Minor Arcane Elixir":
+                        self.restore_mana(15)
+                    case "Potent Leyline Flask":
+                        self.restore_mana(45)
+                    case "Supreme Celestial Nectar":
+                        self.restore_mana(self._max_mana)
+
+                self.mana_potion_inventory.pop(choice)
+                break
+
+            except ValueError:
+                print("Please enter a valid number.")        
 
     def is_alive(self) -> bool:
         return self.cur_health > 0

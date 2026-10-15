@@ -76,41 +76,50 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
         print("2) CAST SPELL")
     else:
         print("2) RAISE EVASION")
+    print("3) CONSUME HEALTH ELIXIR")
+    print("4) CONSUME MANA ELIXIR")
 
     choice = int(input("Choose your action\n"))
+    valid_choices = list(range(1, 5))
 
-    match choice:
-        case 1 | 2:
-            return choice
-        case _:
-            raise ValueError("Invalid Option")
+    if choice not in valid_choices:
+        raise ValueError("Invalid Option")
+
+    return choice
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
     current_status = show_status(hero)
-    print(current_status)
 
-    invalid = True
-    while invalid:
+    while True:
         try:
+            print(current_status)
             action_choice = get_player_action(hero)
-            invalid = False 
+        
+            match action_choice:
+                case 1:
+                    hero.attack(enemy)
+                case 2:
+                    if isinstance(hero, Knight):
+                        hero.raise_shield()
+                    elif isinstance(hero, Mage):
+                        hero.cast_spell(enemy)
+                    elif isinstance(hero, Rogue):
+                        hero.raise_evasion()
+                case 3:
+                    hero.consume_healing_potion()
+                case 4:
+                    hero.consume_mana_potion()
+            
+            if enemy.is_alive():
+                enemy.attack(hero)
+            
+            break
+
         except ValueError as v:
             print(v)
             clear_screen()
-
-    match action_choice:
-        case 1:
-            hero.attack(enemy)
-        case 2:
-            if isinstance(hero, Knight):
-                hero.raise_shield()
-            elif isinstance(hero, Mage):
-                hero.cast_spell(enemy)
-            elif isinstance(hero, Rogue):
-                hero.raise_evasion()
     
-    if enemy.is_alive():
-        enemy.attack(hero)
+    
         
 
 def main():
