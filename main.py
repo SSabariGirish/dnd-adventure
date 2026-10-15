@@ -94,7 +94,9 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
         try:
             print(current_status)
             action_choice = get_player_action(hero)
-        
+            
+            res = True
+
             match action_choice:
                 case 1:
                     hero.attack(enemy)
@@ -106,12 +108,13 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                     elif isinstance(hero, Rogue):
                         hero.raise_evasion()
                 case 3:
-                    hero.consume_healing_potion()
+                    res = hero.consume_healing_potion()
                 case 4:
-                    hero.consume_mana_potion()
-            
-            if enemy.is_alive():
-                enemy.attack(hero)
+                    res = hero.consume_mana_potion()
+
+            if action_choice not in (3, 4) or res:
+                if enemy.is_alive():
+                    enemy.attack(hero)
             
             break
 

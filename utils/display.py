@@ -1,5 +1,5 @@
 from entities.hero import Hero
-
+    
 def display_bar(current: int, maximum: int, width: int = 20) -> str:
 
     if maximum <= 0:

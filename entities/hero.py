@@ -1,3 +1,5 @@
+import os
+
 from core.enums import Species
 from core.weapons import Weapon
 from core.armour import Armour
@@ -49,25 +51,32 @@ class Hero:
         self.cur_mana += mana_amt
         self.cur_mana = min(self.cur_mana, self._max_mana)
 
-    def consume_healing_potion(self):
+    def consume_healing_potion(self) -> bool:
         if len(self.healing_potion_inventory) == 0:
             print("No healing potions available in the inventory")
-            return
+            return False
 
         while True:
             print("===========================================")
             print("         Healing Potion Inventory          ")
             print("===========================================")
 
+            print("0) Go Back")
             for i, potion in enumerate(self.healing_potion_inventory):
                 print(f"{i + 1}) {potion}")
 
             try:
                 choice = int(input("         Choose Healing Potion          "))
+                if choice == 0:
+                    return False
+                
                 choice -= 1
+                
 
                 if choice not in range(len(self.healing_potion_inventory)):
-                    print("Selected option is not in range of healing potion inventory")
+                    input("\nPress Enter to continue...")
+                    os.system("cls" if os.name == "nt" else "clear")
+                    print("Selected option is not in range of healing potion inventory\n\n")
                     continue
 
                 match self.healing_potion_inventory[choice]:
@@ -79,31 +88,39 @@ class Hero:
                         self.heal(self._max_health)
 
                 self.healing_potion_inventory.pop(choice)
-                break
+                return True
 
             except ValueError:
                 print("Please enter a valid number.")
 
 
-    def consume_mana_potion(self):
+    def consume_mana_potion(self) -> bool:
         if len(self.mana_potion_inventory) == 0:
             print("No mana potions available in the inventory")
-            return
+            return False
 
         while True:
             print("===========================================")
             print("           Mana Potion Inventory           ")
             print("===========================================")
 
+            print("0) Go Back")
             for i, potion in enumerate(self.mana_potion_inventory):
                 print(f"{i + 1}) {potion}")
 
             try:
                 choice = int(input("           Choose Mana Potion           "))
+                if choice == 0:
+                    return False
+                
                 choice -= 1
 
                 if choice not in range(len(self.mana_potion_inventory)):
-                    print("Selected option is not in range of mana potion inventory")
+                    input("\nPress Enter to continue...")
+                    os.system("cls" if os.name == "nt" else "clear")
+                    
+                    print("Selected option is not in range of mana potion inventory\n\n")
+
                     continue
 
                 match self.mana_potion_inventory[choice]:
@@ -115,7 +132,7 @@ class Hero:
                         self.restore_mana(self._max_mana)
 
                 self.mana_potion_inventory.pop(choice)
-                break
+                return True
 
             except ValueError:
                 print("Please enter a valid number.")        
