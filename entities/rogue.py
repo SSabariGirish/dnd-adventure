@@ -75,7 +75,19 @@ class Rogue(Hero):
         damage = self.calculate_damage()
         print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
+        return True
 
+    def verify_level_up(self):
+        level_up = super().verify_level_up()
+        if level_up:
+            self._max_health += 7
+            self.cur_health = self._max_health
+            self._max_mana += 8
+            self.cur_mana = self._max_mana
+            self.strength += 1
+            self.dexterity += 3
+            self.deception += 2
+    
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""
         return f"""

@@ -17,6 +17,9 @@ class Hero:
         self.cur_mana = 0
         self.healing_potion_inventory = ['Minor Healing Draught', 'Minor Healing Draught']
         self.mana_potion_inventory = ['Minor Arcane Elixir', 'Minor Arcane Elixir']
+        self.junk_inventory = {}
+        self.gold = 0
+
 
         #Base stats
         self.strength = species.strength
@@ -57,12 +60,25 @@ class Hero:
     def get_next_level_xp(self, level: int) -> int:
         return math.floor(100 * (level ** 1.5))
 
-    def verify_level_up(self):
+    def get_inventory(self) -> bool:
+        print("\n===========================================")
+        print("               Loot Inventory              ")
+        print("===========================================\n")
+        for key, value in self.junk_inventory.items():
+            print(f"{value} {key}(s)")
+        input("\nPress Enter to continue...")
+        os.system("cls" if os.name == "nt" else "clear")
+        return False
+    
+    def verify_level_up(self) -> bool:
         cumulative_xp =  self.get_next_level_xp(self.level)
+        level_up = False
         while self.xp > cumulative_xp:
             print("LEVEL UP!!!")
+            level_up = True
             self.level += 1
             cumulative_xp =  self.get_next_level_xp(self.level)
+        return level_up
 
     def consume_healing_potion(self) -> bool:
         if len(self.healing_potion_inventory) == 0:
@@ -169,7 +185,7 @@ class Hero:
         """
         pass
 
-    def attack(self, target): # 'target' will be another Entity/Hero
+    def attack(self, target) ->  bool: # 'target' will be another Entity/Hero
         """Calculates damage and applies it to the target's take_damage method."""
         pass
 

@@ -2,13 +2,14 @@ from .hero import Hero
 
 class Enemy(Hero):
 
-    def __init__(self, name: str, max_health: int, damage: int, defence: int, xp_reward: int):
+    def __init__(self, name: str, max_health: int, damage: int, defence: int, xp_reward: int, drop_reward: str):
         self._name = name
         self._max_health = max_health
         self._cur_health = max_health
         self._damage = damage
         self._defence = defence
         self._xp_reward = xp_reward
+        self._drop_reward = drop_reward
 
     def take_damage(self, damage: int):
         if damage < 0:
@@ -40,6 +41,9 @@ class Enemy(Hero):
 
     def get_xp_reward(self) -> int:
         return self._xp_reward
+
+    def get_drop_reward(self) -> str:
+        return self._drop_reward
 
     def attack(self, target: Hero):
         print(f"{self._name} has mauled {target.get_name()}")
