@@ -57,12 +57,15 @@ class Hero:
     def get_next_level_xp(self, level: int) -> int:
         return math.floor(100 * (level ** 1.5))
 
-    def verify_level_up(self):
+    def verify_level_up(self) -> bool:
         cumulative_xp =  self.get_next_level_xp(self.level)
+        level_up = False
         while self.xp > cumulative_xp:
             print("LEVEL UP!!!")
+            level_up = True
             self.level += 1
             cumulative_xp =  self.get_next_level_xp(self.level)
+        return level_up
 
     def consume_healing_potion(self) -> bool:
         if len(self.healing_potion_inventory) == 0:

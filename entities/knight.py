@@ -50,6 +50,16 @@ class Knight(Hero):
         print(f"{self._name} raises their shield!")
         return True
 
+    def verify_level_up(self):
+        level_up = super().verify_level_up()
+        if level_up:
+            self._max_health += 12
+            self.cur_health = self._max_health
+            self._max_mana += 3
+            self.cur_mana = self._max_mana
+            self.strength += 2
+            self.dexterity += 1
+
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""
         return f"""
