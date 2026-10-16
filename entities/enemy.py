@@ -42,6 +42,9 @@ class Enemy(Hero):
     def get_xp_reward(self) -> int:
         return self._xp_reward
 
+    def get_drop_reward(self) -> str:
+        return self._drop_reward
+
     def attack(self, target: Hero):
         print(f"{self._name} has mauled {target.get_name()}")
         target.take_damage(self._damage)

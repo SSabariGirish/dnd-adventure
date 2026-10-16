@@ -170,7 +170,6 @@ def main():
             print(ASCII_ART[cur_enemy.get_name().lower()])
             print('\n')
             enemy_turn(hero, cur_enemy)
-            #clear_screen()
         
         combat(hero, cur_enemy)
         
@@ -184,6 +183,12 @@ def main():
             print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
             hero.xp += cur_enemy.get_xp_reward()
             hero.verify_level_up()
+
+            if cur_enemy.get_drop_reward() in hero.junk_inventory:
+                hero.junk_inventory[cur_enemy.get_drop_reward()] += 1
+            else:
+                hero.junk_inventory[cur_enemy.get_drop_reward()] = 1    
+            
             del cur_enemy
 
         clear_screen()
