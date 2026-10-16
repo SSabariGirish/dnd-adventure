@@ -10,15 +10,17 @@ class EnemyTemplate:
     damage: int
     defence: int
     xp_reward: int
+    drop_reward: str
 
 ENEMY_TEMPLATES = {
 
     "goblin": EnemyTemplate(
-            name="Goblin",
-            max_health=18,
-            damage=6,
-            defence=0,
-            xp_reward=8,
+        name="Goblin",
+        max_health=18,
+        damage=6,
+        defence=0,
+        xp_reward=8,
+        drop_reward="Goblin Ear"
         ),
 
     "gnoll": EnemyTemplate(
@@ -27,6 +29,7 @@ ENEMY_TEMPLATES = {
         damage=8,
         defence=1,
         xp_reward=10,
+        drop_reward="Gnoll Fang"
     ),
 
     "wolf": EnemyTemplate(
@@ -35,6 +38,7 @@ ENEMY_TEMPLATES = {
         damage=7,
         defence=0,
         xp_reward=10,
+        drop_reward="Wolf Pelt"
     ),
 
     "bandit": EnemyTemplate(
@@ -43,62 +47,70 @@ ENEMY_TEMPLATES = {
         damage=12,
         defence=3,
         xp_reward=20,
+        drop_reward="Stolen Goods"
     ),
 
     "skeleton": EnemyTemplate(
-            name="Skeleton",
-            max_health=35,
-            damage=10,
-            defence=2,
-            xp_reward=18,
+        name="Skeleton",
+        max_health=35,
+        damage=10,
+        defence=2,
+        xp_reward=18,
+        drop_reward="Bone Fragments"
         ),
 
     "orc warrior": EnemyTemplate(
-            name="Orc Warrior",
-            max_health=65,
-            damage=15,
-            defence=5,
-            xp_reward=35,
+        name="Orc Warrior",
+        max_health=65,
+        damage=15,
+        defence=5,
+        xp_reward=35,
+        drop_reward="Orc Tusk"
         ),
 
     "dire wolf": EnemyTemplate(
-            name="Dire Wolf",
-            max_health=55,
-            damage=14,
-            defence=2,
-            xp_reward=35,
+        name="Dire Wolf",
+        max_health=55,
+        damage=14,
+        defence=2,
+        xp_reward=35,
+        drop_reward="Dire Wolf Pelt"
         ),
 
     "cultist": EnemyTemplate(
-            name="Cultist",
-            max_health=45,
-            damage=19,
-            defence=5,
-            xp_reward=40,
+        name="Cultist",
+        max_health=45,
+        damage=19,
+        defence=5,
+        xp_reward=40,
+        drop_reward="Bloody Robes"
         ),
 
     "ogre": EnemyTemplate(
-            name="Ogre",
-            max_health=110,
-            damage=20,
-            defence=7,
-            xp_reward=75,
+        name="Ogre",
+        max_health=110,
+        damage=20,
+        defence=7,
+        xp_reward=75,
+        drop_reward="Ogre Hide"
         ),
 
     "wraith": EnemyTemplate(
-            name="Wraith",
-            max_health=85,
-            damage=22,
-            defence=5,
-            xp_reward=90,
+        name="Wraith",
+        max_health=85,
+        damage=22,
+        defence=5,
+        xp_reward=90,
+        drop_reward="Wraith Essence"
         ),
 
     "troll": EnemyTemplate(
-            name="Troll",
-            max_health=150,
-            damage=24,
-            defence=8,
-            xp_reward=120,
+        name="Troll",
+        max_health=150,
+        damage=24,
+        defence=8,
+        xp_reward=120,
+        drop_reward="Troll Tongue"
         ),
 
     "necromancer": EnemyTemplate(
@@ -107,22 +119,25 @@ ENEMY_TEMPLATES = {
         damage=28,
         defence=5,
         xp_reward=100,
+        drop_reward="Enchanted Grimoire"
     ),
 
     "wyvern": EnemyTemplate(
-            name="Wyvern",
-            max_health=200,
-            damage=28,
-            defence=10,
-            xp_reward=250,
+        name="Wyvern",
+        max_health=200,
+        damage=28,
+        defence=10,
+        xp_reward=250,
+        drop_reward="Wyvern Scale"
         ),
 
     "griffin": EnemyTemplate(
-            name="Griffin",
-            max_health=250,
-            damage=30,
-            defence=15,
-            xp_reward=500,
+        name="Griffin",
+        max_health=250,
+        damage=30,
+        defence=15,
+        xp_reward=500,
+        drop_reward="Griffin Feather"
         ),
 
     "archgriffin": EnemyTemplate(
@@ -130,7 +145,8 @@ ENEMY_TEMPLATES = {
         max_health=450,
         damage=70,
         defence=24,
-        xp_reward=1000
+        xp_reward=1000,
+        drop_reward="Archgriffin Talon"
     )
 }
 
@@ -237,5 +253,6 @@ def spawn_enemy(level:int) -> Enemy:
         max_health=enemy_template.max_health,
         damage=enemy_template.damage,
         defence=enemy_template.defence,
-        xp_reward=enemy_template.xp_reward
+        xp_reward=enemy_template.xp_reward,
+        drop_reward=enemy_template.drop_reward
     )

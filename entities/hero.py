@@ -17,6 +17,9 @@ class Hero:
         self.cur_mana = 0
         self.healing_potion_inventory = ['Minor Healing Draught', 'Minor Healing Draught']
         self.mana_potion_inventory = ['Minor Arcane Elixir', 'Minor Arcane Elixir']
+        self.junk_inventory = []
+        self.gold = 0
+
 
         #Base stats
         self.strength = species.strength
