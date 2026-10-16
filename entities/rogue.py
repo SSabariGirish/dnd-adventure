@@ -75,6 +75,7 @@ class Rogue(Hero):
         damage = self.calculate_damage()
         print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
+        return True
 
     def verify_level_up(self):
         level_up = super().verify_level_up()

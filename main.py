@@ -83,14 +83,15 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
         print("2) RAISE EVASION")
     print("3) CONSUME HEALTH ELIXIR")
     print("4) CONSUME MANA ELIXIR")
+    print("5) SEE INVENTORY")
     if isinstance(hero, Rogue):
-        print(f"5) SWITCH STANCE - (current stance = {hero.get_stance()})")
+        print(f"6) SWITCH STANCE - (current stance = {hero.get_stance()})")
 
     choice = int(input("Choose your action\n"))
     if isinstance(hero, Rogue):
-        valid_choices = list(range(1, 6))
+        valid_choices = list(range(1, 7))
     else:
-        valid_choices = list(range(1, 5))
+        valid_choices = list(range(1, 6))
 
     if choice not in valid_choices:
         raise ValueError("Invalid Option")
@@ -109,7 +110,7 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
 
             match action_choice:
                 case 1:
-                    hero.attack(enemy)
+                    res = hero.attack(enemy)
                 case 2:
                     if isinstance(hero, Knight):
                         res = hero.raise_shield()
@@ -122,13 +123,15 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                 case 4:
                     res = hero.consume_mana_potion()
                 case 5:
+                    res = hero.get_inventory()
+                case 6:
                     if isinstance(hero, Rogue):
                         res = hero.switch_stance()
                     else:
                         raise ValueError("Invalid Option")
 
             if res and enemy.is_alive() and hero.is_alive():
-                os.system("cls" if os.name == "nt" else "clear")
+                clear_screen()
                 enemy_turn(hero, enemy)
 
         except ValueError as v:

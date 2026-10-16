@@ -60,6 +60,16 @@ class Hero:
     def get_next_level_xp(self, level: int) -> int:
         return math.floor(100 * (level ** 1.5))
 
+    def get_inventory(self) -> bool:
+        print("\n===========================================")
+        print("               Loot Inventory              ")
+        print("===========================================\n")
+        for key, value in self.junk_inventory.items():
+            print(f"{value} {key}(s)")
+        input("\nPress Enter to continue...")
+        os.system("cls" if os.name == "nt" else "clear")
+        return False
+    
     def verify_level_up(self) -> bool:
         cumulative_xp =  self.get_next_level_xp(self.level)
         level_up = False
@@ -175,7 +185,7 @@ class Hero:
         """
         pass
 
-    def attack(self, target): # 'target' will be another Entity/Hero
+    def attack(self, target) ->  bool: # 'target' will be another Entity/Hero
         """Calculates damage and applies it to the target's take_damage method."""
         pass
 

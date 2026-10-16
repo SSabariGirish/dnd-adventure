@@ -35,6 +35,7 @@ class Knight(Hero):
         damage = self.calculate_damage()
         print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
+        return True
 
     def raise_shield(self) -> bool:
         mana_cost = 10
