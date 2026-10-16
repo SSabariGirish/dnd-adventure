@@ -174,6 +174,7 @@ def main():
             spawn_now = True
             print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
             hero.xp += cur_enemy.get_xp_reward()
+            hero.verify_level_up()
             del cur_enemy
             print("A new enemy shall approach the hero soon!")
 

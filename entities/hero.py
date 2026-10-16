@@ -1,4 +1,5 @@
 import os
+import math
 
 from core.enums import Species
 from core.weapons import Weapon
@@ -52,6 +53,16 @@ class Hero:
 
         self.cur_mana += mana_amt
         self.cur_mana = min(self.cur_mana, self._max_mana)
+
+    def get_next_level_xp(self, level: int) -> int:
+        return math.floor(100 * (level ** 1.5))
+
+    def verify_level_up(self):
+        cumulative_xp =  self.get_next_level_xp(self.level)
+        while self.xp > cumulative_xp:
+            print("LEVEL UP!!!")
+            self.level += 1
+            cumulative_xp =  self.get_next_level_xp(self.level)
 
     def consume_healing_potion(self) -> bool:
         if len(self.healing_potion_inventory) == 0:
