@@ -7,12 +7,17 @@ from entities.hero import Hero
 from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
+from utils.monster_art import ASCII_ART
 
 from enemies.templates import spawn_enemy
 
 def clear_screen():
     input("\nPress Enter to continue...")
     os.system("cls" if os.name == "nt" else "clear")
+
+def enemy_turn(hero: Knight | Mage | Rogue, enemy: Enemy):
+    enemy.attack(hero)
+    clear_screen()
 
 #Creating the Hero character
 def create_hero() -> list:
@@ -93,13 +98,13 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     return choice
 
 def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
-    current_status = show_status(hero)
 
-    while True:
+    while hero.is_alive() and enemy.is_alive():
+        current_status = show_status(hero)
+        print(current_status)
+
         try:
-            print(current_status)
             action_choice = get_player_action(hero)
-            
             res = True
 
             match action_choice:
@@ -117,21 +122,19 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                 case 4:
                     res = hero.consume_mana_potion()
                 case 5:
-                    if not isinstance(hero, Rogue):
-                        raise ValueError("Invalid Option")
-                    else:
+                    if isinstance(hero, Rogue):
                         res = hero.switch_stance()
+                    else:
+                        raise ValueError("Invalid Option")
 
-            if res:
-                if enemy.is_alive():
-                    enemy.attack(hero)
-            
-            break
+            if res and enemy.is_alive() and hero.is_alive():
+                os.system("cls" if os.name == "nt" else "clear")
+                enemy_turn(hero, enemy)
 
         except ValueError as v:
             print(v)
-            clear_screen()
-    
+            input("\nPress Enter to try again...")
+            os.system("cls" if os.name == "nt" else "clear")
     
         
 
@@ -160,8 +163,14 @@ def main():
     while hero.is_alive():
         
         if spawn_now:    
-            cur_enemy = spawn_enemy('gnoll')
+            cur_enemy = spawn_enemy(hero.level)
             spawn_now = False
+
+            print(f"\nA {cur_enemy.get_name()} has stopped {hero.get_name()} in their path!\n\n")
+            print(ASCII_ART[cur_enemy.get_name().lower()])
+            print('\n')
+            enemy_turn(hero, cur_enemy)
+            #clear_screen()
         
         combat(hero, cur_enemy)
         
@@ -176,7 +185,6 @@ def main():
             hero.xp += cur_enemy.get_xp_reward()
             hero.verify_level_up()
             del cur_enemy
-            print("A new enemy shall approach the hero soon!")
 
         clear_screen()
 

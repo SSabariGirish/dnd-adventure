@@ -1,3 +1,5 @@
+import random
+
 from dataclasses import dataclass
 from entities.enemy import Enemy
 
@@ -10,6 +12,14 @@ class EnemyTemplate:
     xp_reward: int
 
 ENEMY_TEMPLATES = {
+
+    "goblin": EnemyTemplate(
+            name="Goblin",
+            max_health=18,
+            damage=6,
+            defence=0,
+            xp_reward=8,
+        ),
 
     "gnoll": EnemyTemplate(
         name="Gnoll",
@@ -27,14 +37,6 @@ ENEMY_TEMPLATES = {
         xp_reward=10,
     ),
 
-    "undead": EnemyTemplate(
-        name="Undead",
-        max_health=50,
-        damage=14,
-        defence=4,
-        xp_reward=25,
-    ),
-
     "bandit": EnemyTemplate(
         name="Bandit",
         max_health=40,
@@ -43,24 +45,188 @@ ENEMY_TEMPLATES = {
         xp_reward=20,
     ),
 
+    "skeleton": EnemyTemplate(
+            name="Skeleton",
+            max_health=35,
+            damage=10,
+            defence=2,
+            xp_reward=18,
+        ),
+
+    "orc warrior": EnemyTemplate(
+            name="Orc Warrior",
+            max_health=65,
+            damage=15,
+            defence=5,
+            xp_reward=35,
+        ),
+
+    "dire wolf": EnemyTemplate(
+            name="Dire Wolf",
+            max_health=55,
+            damage=14,
+            defence=2,
+            xp_reward=35,
+        ),
+
+    "cultist": EnemyTemplate(
+            name="Cultist",
+            max_health=45,
+            damage=19,
+            defence=5,
+            xp_reward=40,
+        ),
+
+    "ogre": EnemyTemplate(
+            name="Ogre",
+            max_health=110,
+            damage=20,
+            defence=7,
+            xp_reward=75,
+        ),
+
+    "wraith": EnemyTemplate(
+            name="Wraith",
+            max_health=85,
+            damage=22,
+            defence=5,
+            xp_reward=90,
+        ),
+
+    "troll": EnemyTemplate(
+            name="Troll",
+            max_health=150,
+            damage=24,
+            defence=8,
+            xp_reward=120,
+        ),
+
     "necromancer": EnemyTemplate(
         name="Necromancer",
         max_health=80,
-        damage=18,
-        defence=3,
-        xp_reward=60,
+        damage=28,
+        defence=5,
+        xp_reward=100,
     ),
 
-    "dragon": EnemyTemplate(
-        name="Dragon",
-        max_health=250,
-        damage=30,
-        defence=15,
+    "wyvern": EnemyTemplate(
+            name="Wyvern",
+            max_health=200,
+            damage=28,
+            defence=10,
+            xp_reward=250,
+        ),
+
+    "griffin": EnemyTemplate(
+            name="Griffin",
+            max_health=250,
+            damage=30,
+            defence=15,
+            xp_reward=500,
+        ),
+
+    "archgriffin": EnemyTemplate(
+        name="Archgriffin",
+        max_health=450,
+        damage=70,
+        defence=24,
         xp_reward=1000
     )
 }
 
-def spawn_enemy(enemy_id: str) -> Enemy:
+SPAWN_WEIGHTS = {
+    (1, 2): {
+        "goblin": 30,
+        "gnoll": 35,
+        "wolf": 30,
+        "bandit": 2,
+        "skeleton" : 2,
+        "orc warrior": 0.5,
+        "dire wolf": 0.5
+    },
+    (3, 4): {
+        "goblin": 19,
+        "gnoll": 22,
+        "wolf": 20,
+        "bandit": 15,
+        "skeleton": 10,
+        "orc warrior": 6,
+        "dire wolf": 5,
+        "cultist": 2,
+        "ogre": 1
+
+    },
+    (5, 7): {
+        "goblin": 8,
+        "gnoll": 10,
+        "wolf": 8,
+        "bandit": 12,
+        "skeleton": 12,
+        "orc warrior": 8,
+        "dire wolf": 8,
+        "cultist": 8,
+        "ogre": 8,
+        "wraith": 8,
+        "troll": 5,
+        "necromancer": 5
+    },
+    (8, 10): {
+        "goblin": 5,
+        "gnoll": 5,
+        "wolf": 5,
+        "bandit": 7,
+        "skeleton": 7,
+        "orc warrior": 7,
+        "dire wolf": 7,
+        "cultist": 7,
+        "ogre": 8,
+        "wraith": 7,
+        "troll": 7,
+        "necromancer": 7,
+        "wyvern": 8,
+        "griffin": 8,
+        "archgriffin": 5
+    },
+    (11, 9999) : {
+        "goblin": 2,
+        "gnoll": 2,
+        "wolf": 2,
+        "bandit": 5,
+        "skeleton": 5,
+        "orc warrior": 5,
+        "dire wolf": 5,
+        "cultist": 6,
+        "ogre": 7,
+        "wraith": 7,
+        "troll": 7,
+        "necromancer": 7,
+        "wyvern": 10,
+        "griffin": 12,
+        "archgriffin": 18
+    }
+}
+
+def get_spawn_weights(level: int) -> dict[str, dict[str, int]]:
+    if level <= 2:
+        return SPAWN_WEIGHTS[(1, 2)]
+    elif level <= 4:
+        return SPAWN_WEIGHTS[(3, 4)]
+    elif level <= 7:
+        return SPAWN_WEIGHTS[(5, 7)]
+    elif level <= 10:
+        return SPAWN_WEIGHTS[(8, 10)]
+    else:
+        return SPAWN_WEIGHTS[(11, 9999)]
+
+def spawn_enemy(level:int) -> Enemy:
+    enemy_dict = get_spawn_weights(level)
+
+    enemy_id = random.choices(
+        population=list(enemy_dict.keys()),
+        weights=list(enemy_dict.values()),
+        k=1
+    )[0]
+
     if enemy_id not in ENEMY_TEMPLATES:
         raise ValueError("Enemy not found in Bestiary")
 
