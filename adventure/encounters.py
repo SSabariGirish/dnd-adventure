@@ -1,11 +1,31 @@
 import random
 from entities.hero import Hero
+from entities.enemy import Enemy
+from enemies.templates import spawn_enemy
 
 ENCOUNTER_TYPES = {
     "Innkeeper": 20,
     "Merchant": 20,
     "Huntsman": 30,
     "Enemy": 30
+}
+
+JUNK_PRICES = {
+    "Goblin Ear": 5,
+    "Gnoll Fang": 7,
+    "Wolf Pelt": 8,
+    "Bandit Insignia": 12,
+    "Bone Fragments": 10,
+    "Orc Tusk": 18,
+    "Dire Wolf Pelt": 22,
+    "Bloody Robes": 25,
+    "Ogre Hide": 35,
+    "Wraith Essence": 45,
+    "Troll Tongue": 55,
+    "Enchanted Grimoire": 60,
+    "Wyvern Scale": 100,
+    "Griffin Feather": 175,
+    "Archgriffin Talon": 300,
 }
 
 
@@ -119,7 +139,6 @@ def buy_potions(hero: Hero, price_mul: float):
     print(f"You purchased {name} for {final_price} Gold.")
     print(f"Remaining Gold: {hero.gold}")
 
-
 def merchant_encounter(hero: Hero):
     print("\nYou approach a merchant with a cart full of potions.")
     print('"Looking to buy something, traveller?"')
@@ -154,19 +173,95 @@ def merchant_encounter(hero: Hero):
         case _:
             print("The merchant tells you to stop wasting his time and walks away spitting next to your foot.")
 
-    
+def sell_junk(hero: Hero, price_mul: float):
+    if not hero.junk_inventory:
+        print("\nYou have no monster trophies to sell.")
+        return
 
-def get_random_encounter():
+    total_value = 0
+
+    print("\nThe huntsman examines your trophies:")
+
+    for item, quantity in hero.junk_inventory.items():
+        base_price = JUNK_PRICES.get(item, 0)
+        item_price = round(base_price * price_mul)
+        subtotal = item_price * quantity
+
+        print(f"{item} x{quantity} - {subtotal} Gold")
+        total_value += subtotal
+
+    if total_value == 0:
+        print("\nThe huntsman finds nothing worth buying.")
+        return
+
+    print(f"\nTotal payment: {total_value} Gold")
+    hero.gold += total_value
+    hero.junk_inventory.clear()
+
+    print(f"You receive {total_value} Gold!")
+    print(f"Remaining Gold: {hero.gold}")
+
+def huntsman_encounter(hero: Hero):
+    print("\nYou meet a huntsman who buys monster trophies.")
+    print('"Anything worth selling, traveller?"')
+
+    print("\n1) Negotiate (INT Check)")
+    print("2) Bluff (DEC Check)")
+    print("3) Sell at the listed price")
+    print("4) Leave")
+
+    choice = input("Make a decision: ")
+
+    match choice:
+        case "1":
+            if roll_check(hero.intelligence, 15):
+                print("\nThe huntsman nods, impressed by your knowledge of monster trophies.")
+                print("He agrees to pay you a little above the usual price acknowledging the difficulty.")
+                sell_junk(hero, 1.25)
+            else:
+                print("\nThe huntsman catches a flaw in your valuation and turns the tables.")
+                print("He offers you only 3/4th of the usual price.")
+                sell_junk(hero, 0.75)
+
+        case "2":
+            if roll_check(hero.deception, 18):
+                print("\nThe huntsman falls for your outrageous claims about the rarity of your trophies.")
+                print("He pays you DOUBLE their usual value!")
+                sell_junk(hero, 2.0)
+            else:
+                print("\nThe huntsman sees straight through your lies and snarls.")
+                print("He hurls a poisoned dart at you!")
+                print("You take 20 true damage, and your armour deteriorates permanently.")
+                hero.cur_health -= 20
+                hero.deteriorate_armour(1)
+
+        case "3":
+            print("\nThe huntsman inspects your trophies and offers you their standard value.")
+            sell_junk(hero, 1.0)
+
+        case "4":
+            print("\nYou decide to keep your trophies and move on.")
+
+        case _:
+            print("\nThe huntsman dismisses you as a madman and leaves, muttering a prayer to himself.")
+
+def get_random_encounter(hero: Hero):
+
     choice = random.choices(
         population=list(ENCOUNTER_TYPES.keys()),
         weights=list(ENCOUNTER_TYPES.values()),
         k=1
     )[0]
+    
     match choice:
         case "Innkeeper":
-            innkeeper_encounter()
-
-    return choice
+            innkeeper_encounter(hero)
+        case "Merchant":
+            merchant_encounter(hero)
+        case "Huntsman":
+            huntsman_encounter(hero)
+        case "Enemy":
+            new_enemy = spawn_enemy(hero.level)
 
 for i in range(15):
     print(get_random_encounter())
