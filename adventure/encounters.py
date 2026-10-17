@@ -25,14 +25,14 @@ def ask_about_rumours(hero: Hero):
     choice = input("Choose your approach: ")
 
     if choice == "1":
-        if roll_check(hero.intelligence):
+        if roll_check(hero.intelligence, 14):
             print("\nYou piece together useful information!")
             hero.attack_modifier = 1.15
         else:
             print("\nThe rumours reveal nothing particularly useful.")
 
     elif choice == "2":
-        if roll_check(hero.deception):
+        if roll_check(hero.deception, 18):
             print("\nThe innkeeper believes your bluff and reveals impending threats!")
             print("\nHe requests you to spend the night at the inn.")
             print("\nYou wake up refreshed and ready for the day")
@@ -74,9 +74,87 @@ def innkeeper_encounter(hero: Hero):
         case _:
             print("The innkeeper kicks you out of the inn, fearing that you're a spy from the neighbouring kingdom")
 
-def merchant_encounter(hero: Hero):
-    pass
+def buy_potions(hero: Hero, price_mul: float):
+    potions = {
+        "1": ("Minor Healing Draught", 10, "health"),
+        "2": ("Concentrated Healing Draught", 25, "health"),
+        "3": ("Pure Vitality Draught", 50, "health"),
+        "4": ("Minor Arcane Elixir", 10, "mana"),
+        "5": ("Potent Leyline Flask", 25, "mana"),
+        "6": ("Supreme Celestial Nectar", 50, "mana")
+    }
 
+    print("\nThe list of available potions:")
+
+    for key, (name, price, _) in potions.items():
+        final_price = round(price * price_mul)
+        print(f"{key}) {name} - {final_price} Gold")
+
+    print("7) Leave")
+
+    choice = input("\nWhich potion would you like to buy? ")
+
+    if choice == "7":
+        print("You decide not to buy anything.")
+        return
+
+    if choice not in potions:
+        print("Invalid choice.")
+        return
+
+    name, price, potion_type = potions[choice]
+    final_price = round(price * price_mul)
+
+    if hero.gold < final_price:
+        print("You don't have enough Gold...")
+        return
+
+    hero.gold -= final_price
+
+    if potion_type == "health":
+        hero.healing_potion_inventory.append(name)
+    else:
+        hero.mana_potion_inventory.append(name)
+
+    print(f"You purchased {name} for {final_price} Gold.")
+    print(f"Remaining Gold: {hero.gold}")
+
+
+def merchant_encounter(hero: Hero):
+    print("\nYou approach a merchant with a cart full of potions.")
+    print('"Looking to buy something, traveller?"')
+
+    print("\n1) Ask for a discount (INT Check)")
+    print("2) Try to swindle the merchant (DEC Check)")
+    print("3) Browse potions at the listed price")
+    print("4) Leave")
+
+    choice = input("Make a decision: ")
+
+    match choice:
+        case "1":
+            if roll_check(hero.intelligence, 15):
+                print('\nThe merchant yields to your smooth words and offers a short discount')
+                buy_potions(hero, 0.85)
+            else:
+                print("\nThe merchant turns the tables and you must now pay an extra tax on top of the price")
+                buy_potions(hero, 1.1)
+        case "2":
+            if roll_check(hero.deception, 18):
+                print("\nThe merchant hands over a Concentrated Healing Draught and a Potent Leyline Flask free of charge. He now feels he has been blessed by the Gods!")
+                hero.mana_potion_inventory.append('Potent Leyline Flask')
+                hero.healing_potion_inventory.append('Concentrated Healing Draught')
+            else:
+                print("\nThe merchant is convinced that the hero is a devil worshipper and flings a bomb at the hero")
+                hero.cur_health -= 30
+        case "3":
+            buy_potions(hero, 1.0)
+        case "4":
+            print("You admire the merchant's wares but decide not to purchase anything.")
+        case _:
+            print("The merchant tells you to stop wasting his time and walks away spitting next to your foot.")
+
+    
 
 def get_random_encounter():
     choice = random.choices(
