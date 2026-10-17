@@ -8,6 +8,7 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
+from adventure.encounters import get_random_encounter
 
 from enemies.templates import spawn_enemy
 
@@ -164,7 +165,8 @@ def main():
     spawn_now = True
 
     while hero.is_alive():
-        
+        encounter = get_random_encounter()
+        print(f'You have encountered {encounter}')
         if spawn_now:    
             cur_enemy = spawn_enemy(hero.level)
             spawn_now = False

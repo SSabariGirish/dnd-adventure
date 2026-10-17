@@ -19,6 +19,7 @@ class Hero:
         self.mana_potion_inventory = ['Minor Arcane Elixir', 'Minor Arcane Elixir']
         self.junk_inventory = {}
         self.gold = 0
+        self.attack_modifier = 1.0
 
 
         #Base stats
