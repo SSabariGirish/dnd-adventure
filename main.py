@@ -8,17 +8,13 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
-from adventure.encounters import get_random_encounter
+from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter
 
 from enemies.templates import spawn_enemy
 
 def clear_screen():
     input("\nPress Enter to continue...")
     os.system("cls" if os.name == "nt" else "clear")
-
-def enemy_turn(hero: Knight | Mage | Rogue, enemy: Enemy):
-    enemy.attack(hero)
-    clear_screen()
 
 #Creating the Hero character
 def create_hero() -> list:
@@ -70,77 +66,27 @@ def create_hero() -> list:
             raise ValueError("Invalid Class Chosen")         
 
     return info_list
-
-def get_player_action(hero: Knight | Mage | Rogue) -> int:
-    print("===========================================")
-    print("         What are you Going to Do?         ")
-    print("===========================================")
-    print("1) ATTACK")
-    if isinstance(hero, Knight):
-        print("2) RAISE HOLY SHIELD")
-    elif isinstance(hero, Mage):
-        print("2) CAST SPELL")
-    else:
-        print("2) RAISE EVASION")
-    print("3) CONSUME HEALTH ELIXIR")
-    print("4) CONSUME MANA ELIXIR")
-    print("5) SEE INVENTORY")
-    if isinstance(hero, Rogue):
-        print(f"6) SWITCH STANCE - (current stance = {hero.get_stance()})")
-
-    choice = int(input("Choose your action\n"))
-    if isinstance(hero, Rogue):
-        valid_choices = list(range(1, 7))
-    else:
-        valid_choices = list(range(1, 6))
-
-    if choice not in valid_choices:
-        raise ValueError("Invalid Option")
-
-    return choice
-
-def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
-
-    while hero.is_alive() and enemy.is_alive():
-        current_status = show_status(hero)
-        print(current_status)
-
-        try:
-            action_choice = get_player_action(hero)
-            res = True
-
-            match action_choice:
-                case 1:
-                    res = hero.attack(enemy)
-                case 2:
-                    if isinstance(hero, Knight):
-                        res = hero.raise_shield()
-                    elif isinstance(hero, Mage):
-                        res = hero.cast_spell(enemy)
-                    elif isinstance(hero, Rogue):
-                        res = hero.raise_evasion()
-                case 3:
-                    res = hero.consume_healing_potion()
-                case 4:
-                    res = hero.consume_mana_potion()
-                case 5:
-                    res = hero.get_inventory()
-                case 6:
-                    if isinstance(hero, Rogue):
-                        res = hero.switch_stance()
-                    else:
-                        raise ValueError("Invalid Option")
-
-            if res and enemy.is_alive() and hero.is_alive():
-                clear_screen()
-                enemy_turn(hero, enemy)
-
-        except ValueError as v:
-            print(v)
-            input("\nPress Enter to try again...")
-            os.system("cls" if os.name == "nt" else "clear")
     
-        
+
+def handle_encounters(hero: Hero):
+    encounter = get_random_encounter(hero)
+    print(f'You have encountered {encounter}')
+    match encounter:
+        case "Innkeeper":
+            innkeeper_encounter(hero)
+        case "Merchant":
+            merchant_encounter(hero)
+        case "Huntsman":
+            huntsman_encounter(hero)
+        case "Enemy":
+            enemy_encounter(hero)
+        case _:
+            print(f"{hero.get_name()} avoids the town")
+    
+    if not hero.is_alive():
+        print(f"{hero.get_name()} has courageously fallen in battle and will not be forgotten")
+        clear_screen()
+                    
 
 def main():
     invalid = True
@@ -162,40 +108,9 @@ def main():
     clear_screen()
     print(hero)
     clear_screen()
-    spawn_now = True
 
     while hero.is_alive():
-        encounter = get_random_encounter()
-        print(f'You have encountered {encounter}')
-        if spawn_now:    
-            cur_enemy = spawn_enemy(hero.level)
-            spawn_now = False
-
-            print(f"\nA {cur_enemy.get_name()} has stopped {hero.get_name()} in their path!\n\n")
-            print(ASCII_ART[cur_enemy.get_name().lower()])
-            print('\n')
-            enemy_turn(hero, cur_enemy)
-        
-        combat(hero, cur_enemy)
-        
-
-        if not hero.is_alive():
-            print(f"{hero.get_name()} has courageously fallen in battle and will not be forgotten")
-            clear_screen()
-        
-        if not cur_enemy.is_alive():
-            spawn_now = True
-            print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
-            hero.xp += cur_enemy.get_xp_reward()
-            hero.verify_level_up()
-
-            if cur_enemy.get_drop_reward() in hero.junk_inventory:
-                hero.junk_inventory[cur_enemy.get_drop_reward()] += 1
-            else:
-                hero.junk_inventory[cur_enemy.get_drop_reward()] = 1    
-            
-            del cur_enemy
-
+        handle_encounters(hero)
         clear_screen()
 
 if __name__=="__main__":
