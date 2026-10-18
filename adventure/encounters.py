@@ -11,10 +11,10 @@ from utils.monster_art import ASCII_ART
 from utils.display import show_status
 
 ENCOUNTER_TYPES = {
-    "Innkeeper": 20,
-    "Merchant": 20,
-    "Huntsman": 30,
-    "Enemy": 30
+    "Innkeeper": 10,
+    "Merchant": 10,
+    "Huntsman": 10,
+    "Enemy": 70
 }
 
 JUNK_PRICES = {
@@ -35,10 +35,11 @@ JUNK_PRICES = {
     "Archgriffin Talon": 300,
 }
 
-
 def roll_check(stat: int, target: int) -> bool:
     dice_roll = random.randint(1, 20)
     full_stat = dice_roll + stat
+    print(f"You needed {target}")
+    print(f"You have rolled {full_stat}")
     if full_stat >= target:
         return True
     return False
@@ -49,7 +50,7 @@ def ask_about_rumours(hero: Hero):
     print("\n1) Listen carefully to the local rumours")
     print("2) Pretend you are an envoy of the kingdom")
 
-    choice = input("Choose your approach: ")
+    choice = input("\nChoose your approach: ")
 
     if choice == "1":
         if roll_check(hero.intelligence, 14):
@@ -83,7 +84,7 @@ def innkeeper_encounter(hero: Hero):
     print("2) Spend the night at the inn")
     print("3) Leave town")
 
-    choice = input('Make a decision')
+    choice = input('\nMake a decision: ')
     match choice:
         case "1":
             ask_about_rumours(hero)
@@ -155,7 +156,7 @@ def merchant_encounter(hero: Hero):
     print("3) Browse potions at the listed price")
     print("4) Leave")
 
-    choice = input("Make a decision: ")
+    choice = input("\nMake a decision: ")
 
     match choice:
         case "1":
@@ -217,7 +218,7 @@ def huntsman_encounter(hero: Hero):
     print("3) Sell at the listed price")
     print("4) Leave")
 
-    choice = input("Make a decision: ")
+    choice = input("\nMake a decision: ")
 
     match choice:
         case "1":
@@ -352,7 +353,6 @@ def enemy_encounter(hero: Hero):
         hero.junk_inventory[cur_enemy.get_drop_reward()] = 1    
                 
     del cur_enemy
-
 
 def get_random_encounter(hero: Hero) -> str:
 

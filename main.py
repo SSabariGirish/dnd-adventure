@@ -71,6 +71,7 @@ def create_hero() -> list:
 def handle_encounters(hero: Hero):
     encounter = get_random_encounter(hero)
     print(f'You have encountered {encounter}')
+    print(f"Your current Gold: {hero.gold}")
     match encounter:
         case "Innkeeper":
             innkeeper_encounter(hero)
@@ -85,7 +86,6 @@ def handle_encounters(hero: Hero):
     
     if not hero.is_alive():
         print(f"{hero.get_name()} has courageously fallen in battle and will not be forgotten")
-        clear_screen()
                     
 
 def main():
