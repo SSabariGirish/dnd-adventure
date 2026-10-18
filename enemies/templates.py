@@ -47,7 +47,7 @@ ENEMY_TEMPLATES = {
         damage=12,
         defence=3,
         xp_reward=20,
-        drop_reward="Stolen Goods"
+        drop_reward="Bandit Insignia"
     ),
 
     "skeleton": EnemyTemplate(

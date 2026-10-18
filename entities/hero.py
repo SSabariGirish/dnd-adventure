@@ -19,6 +19,7 @@ class Hero:
         self.mana_potion_inventory = ['Minor Arcane Elixir', 'Minor Arcane Elixir']
         self.junk_inventory = {}
         self.gold = 0
+        self.attack_modifier = 1.0
 
 
         #Base stats
@@ -79,6 +80,10 @@ class Hero:
             self.level += 1
             cumulative_xp =  self.get_next_level_xp(self.level)
         return level_up
+
+    def deteriorate_armour(self, damage: int):
+        self._armour -= damage
+        self._armour = max(0, self._armour)
 
     def consume_healing_potion(self) -> bool:
         if len(self.healing_potion_inventory) == 0:
