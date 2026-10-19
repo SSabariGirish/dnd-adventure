@@ -9,8 +9,21 @@ from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
 from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter
-
 from enemies.templates import spawn_enemy
+
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+client = genai.Client(api_key=GOOGLE_API_KEY)
+
+
+def gemini_interaction(query: str) -> str:
+    interaction = client.interactions.create(
+        model="gemini-3.8-flash",
+        input=query
+    )
+    return interaction.output_text
 
 def clear_screen():
     input("\nPress Enter to continue...")
