@@ -20,6 +20,7 @@ class Hero:
         self.junk_inventory = {}
         self.gold = 0
         self.attack_modifier = 1.0
+        self.quests = []
 
 
         #Base stats

@@ -9,12 +9,14 @@ from entities.rogue import Rogue
 from enemies.templates import spawn_enemy
 from utils.monster_art import ASCII_ART
 from utils.display import show_status
+from adventure.quest import PeasantQuest
 
 ENCOUNTER_TYPES = {
     "Innkeeper": 10,
     "Merchant": 10,
     "Huntsman": 10,
-    "Enemy": 70
+    "Peasant": 15,
+    "Enemy": 55
 }
 
 JUNK_PRICES = {
@@ -353,6 +355,27 @@ def enemy_encounter(hero: Hero):
         hero.junk_inventory[cur_enemy.get_drop_reward()] = 1    
                 
     del cur_enemy
+
+def peasant_encounter(hero: Hero):
+    print("\nA worried peasant approaches you.")
+    print('"Please, traveller! Monsters are terrorising our village!"')
+    print('"Will you help us?"')
+
+    print("\n1) Accept the quest")
+    print("2) Decline")
+
+    choice = input("Make a decision: ")
+
+    match choice:
+        case "1":
+            print("\nThe peasant explains the situation.")
+            
+
+        case "2":
+            print("\nYou apologise and continue on your journey.")
+
+        case _:
+            print("\nThe peasant looks confused, mutters a prayer for your lost soul and walks away.")
 
 def get_random_encounter(hero: Hero) -> str:
 

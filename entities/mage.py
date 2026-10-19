@@ -27,9 +27,10 @@ class Mage(Hero):
         return self._weapon.damage + self.intelligence
     
     def attack(self, target: Hero):
-        damage = self.calculate_damage()
+        damage = (self.calculate_damage()) * self.attack_modifier
         print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
+        self.attack_modifier = 1.0
         return True
 
     def cast_spell(self, target: Hero) -> bool:
@@ -42,10 +43,11 @@ class Mage(Hero):
 
         self.cur_mana -= mana_cost
 
-        damage = self._weapon.damage + (self.intelligence * 2)
+        damage = (self._weapon.damage + (self.intelligence * 2)) * self.attack_modifier
         print(f"{self._name} casts Arcane bolt at {target.get_name()}")
         
         target.take_damage(damage)
+        self.attack_modifier = 1.0
         return True
 
     def verify_level_up(self):

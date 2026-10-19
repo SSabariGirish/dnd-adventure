@@ -35,6 +35,7 @@ class Knight(Hero):
         damage = self.calculate_damage()
         print(f"{self._name} swings at {target.get_name()}")
         target.take_damage(damage)
+        self.attack_modifier = 1.0
         return True
 
     def raise_shield(self) -> bool:
