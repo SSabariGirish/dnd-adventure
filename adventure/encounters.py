@@ -18,7 +18,9 @@ ENCOUNTER_TYPES = {
     "Peasant": 15,
     "Enemy": 55
 }
-
+LIST_OF_ENEMIES = ["Goblin", "Gnoll", "Wolf", "Bandit", "Skeleton",
+                   "Orc", "Dire Wolf", "Cultist", "Ogre", "Wraith",
+                   "Troll", "Wyvern", "Griffin", "Archgriffin"]
 JUNK_PRICES = {
     "Goblin Ear": 5,
     "Gnoll Fang": 7,
@@ -347,6 +349,16 @@ def enemy_encounter(hero: Hero):
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
     hero.xp += cur_enemy.get_xp_reward()
+    for quest in hero.quests:
+        ans = quest.record_kill(cur_enemy.get_name())
+        if ans:
+            print(f"{hero.get_name()} has completed a citizen's quest")
+            print(f"The village sends prayers in your name")
+            print(f"You have earned {quest.xp_reward} XP and {quest.gold_reward} Gold")
+            hero.xp += quest.xp_reward
+            hero.gold += quest.gold_reward
+            del quest
+            break
     hero.verify_level_up()
     
     if cur_enemy.get_drop_reward() in hero.junk_inventory:
@@ -369,7 +381,12 @@ def peasant_encounter(hero: Hero):
     match choice:
         case "1":
             print("\nThe peasant explains the situation.")
-            
+            num_enemies = random.randint(1, 5)
+            enemy_choice = LIST_OF_ENEMIES[random.randint(0, len(LIST_OF_ENEMIES) - 1)]
+            new_quest = PeasantQuest(enemy_choice, num_enemies, 250, 100)
+            print(f"The village asks you to hunt {num_enemies} {enemy_choice}(s)")
+            print(f"They pool their assets together to grant you 250 XP and 100 Gold if you complete the quest")
+            hero.quests.append(new_quest)
 
         case "2":
             print("\nYou apologise and continue on your journey.")

@@ -8,14 +8,14 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
-from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter
+from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter
 from enemies.templates import spawn_enemy
 
-from google import genai
-from dotenv import load_dotenv
+#from google import genai
+#from dotenv import load_dotenv
 
-load_dotenv()
-client = genai.Client(api_key=GOOGLE_API_KEY)
+#load_dotenv()
+#client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
 def gemini_interaction(query: str) -> str:
@@ -94,6 +94,8 @@ def handle_encounters(hero: Hero):
             huntsman_encounter(hero)
         case "Enemy":
             enemy_encounter(hero)
+        case "Peasant":
+            peasant_encounter(hero)
         case _:
             print(f"{hero.get_name()} avoids the town")
     
