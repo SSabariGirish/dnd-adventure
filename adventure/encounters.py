@@ -353,8 +353,8 @@ def enemy_encounter(hero: Hero):
         ans = quest.record_kill(cur_enemy.get_name())
         if ans:
             print(f"{hero.get_name()} has completed a citizen's quest")
-            print(f"The village sends prayers in your name")
-            print(f"You have earned {quest.xp_reward} XP and {quest.gold_reward} Gold")
+            print(f"The village sends prayers in your name, promising to never forget your valour")
+            print(f"You have earned {quest.xp_reward} XP and {quest.gold_reward} Gold\n")
             hero.xp += quest.xp_reward
             hero.gold += quest.gold_reward
             del quest
