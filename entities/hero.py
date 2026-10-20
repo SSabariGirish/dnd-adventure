@@ -4,6 +4,7 @@ import math
 from core.enums import Species
 from core.weapons import Weapon
 from core.armour import Armour
+from adventure.quest import PeasantQuest
 
 class Hero:
 
@@ -20,6 +21,7 @@ class Hero:
         self.junk_inventory = {}
         self.gold = 0
         self.attack_modifier = 1.0
+        self.quests: list[PeasantQuest] = []
 
 
         #Base stats

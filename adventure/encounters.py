@@ -9,14 +9,18 @@ from entities.rogue import Rogue
 from enemies.templates import spawn_enemy
 from utils.monster_art import ASCII_ART
 from utils.display import show_status
+from adventure.quest import PeasantQuest
 
 ENCOUNTER_TYPES = {
     "Innkeeper": 10,
     "Merchant": 10,
     "Huntsman": 10,
-    "Enemy": 70
+    "Peasant": 15,
+    "Enemy": 55
 }
-
+LIST_OF_ENEMIES = ["Goblin", "Gnoll", "Wolf", "Bandit", "Skeleton",
+                   "Orc", "Dire Wolf", "Cultist", "Ogre", "Wraith",
+                   "Troll", "Wyvern", "Griffin", "Archgriffin"]
 JUNK_PRICES = {
     "Goblin Ear": 5,
     "Gnoll Fang": 7,
@@ -345,6 +349,16 @@ def enemy_encounter(hero: Hero):
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
     hero.xp += cur_enemy.get_xp_reward()
+    for quest in hero.quests:
+        ans = quest.record_kill(cur_enemy.get_name())
+        if ans:
+            print(f"{hero.get_name()} has completed a citizen's quest")
+            print(f"The village sends prayers in your name, promising to never forget your valour")
+            print(f"You have earned {quest.xp_reward} XP and {quest.gold_reward} Gold\n")
+            hero.xp += quest.xp_reward
+            hero.gold += quest.gold_reward
+            del quest
+            break
     hero.verify_level_up()
     
     if cur_enemy.get_drop_reward() in hero.junk_inventory:
@@ -353,6 +367,32 @@ def enemy_encounter(hero: Hero):
         hero.junk_inventory[cur_enemy.get_drop_reward()] = 1    
                 
     del cur_enemy
+
+def peasant_encounter(hero: Hero):
+    print("\nA worried peasant approaches you.")
+    print('"Please, traveller! Monsters are terrorising our village!"')
+    print('"Will you help us?"')
+
+    print("\n1) Accept the quest")
+    print("2) Decline")
+
+    choice = input("Make a decision: ")
+
+    match choice:
+        case "1":
+            print("\nThe peasant explains the situation.")
+            num_enemies = random.randint(1, 5)
+            enemy_choice = LIST_OF_ENEMIES[random.randint(0, len(LIST_OF_ENEMIES) - 1)]
+            new_quest = PeasantQuest(enemy_choice, num_enemies, 250, 100)
+            print(f"The village asks you to hunt {num_enemies} {enemy_choice}(s)")
+            print(f"They pool their assets together to grant you 250 XP and 100 Gold if you complete the quest")
+            hero.quests.append(new_quest)
+
+        case "2":
+            print("\nYou apologise and continue on your journey.")
+
+        case _:
+            print("\nThe peasant looks confused, mutters a prayer for your lost soul and walks away.")
 
 def get_random_encounter(hero: Hero) -> str:
 

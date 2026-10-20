@@ -8,9 +8,95 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
-from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter
-
+from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter
 from enemies.templates import spawn_enemy
+
+#from google import genai
+from dotenv import load_dotenv
+from openrouter import OpenRouter
+
+load_dotenv()
+api_key = os.getenv("OPENROUTER_API_KEY")
+
+visited_places = []
+
+if not api_key:
+    raise ValueError("OPENROUTER_API_KEY was not found in .env")
+
+def openrouter_interaction(query: str):
+
+    with OpenRouter(api_key=api_key) as client:
+        response = client.chat.send(
+            model="openrouter/free",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are the Dungeon Master of a fantasy adventure. Write immersive, original descriptions."
+                }, 
+                {
+                    "role": "user",
+                    "content": query
+                }
+            ],
+            temperature=0.8,
+            max_tokens=200,
+            stream=False
+        )
+
+        return response.choices[0].message.content
+
+def generate_town_lore():
+    visited = ", ".join(visited_places) if visited_places else "None"
+
+    query = f"""
+    Generate a new town for a fantasy DnD adventure.
+
+    Previously visited towns: {visited}
+
+    Do not reuse any previously visited town.
+    Invent a unique fantasy town name and describe its
+    appearance, atmosphere, and one interesting detail.
+
+    Return exactly this format:
+
+    Town: <town name>
+    Lore: <town description>
+    """
+
+    for _ in range(3):
+        response = openrouter_interaction(query)
+
+        town_line = next(
+            (line for line in response.splitlines()
+             if line.strip().lower().startswith("town:")),
+            None
+        )
+
+        if town_line is None:
+            continue
+
+        town_name = town_line.split(":", 1)[1].strip()
+
+        if not town_name:
+            continue
+
+        if town_name.casefold() in {
+            place.casefold() for place in visited_places
+        }:
+            query += (
+                "\nYour previous response reused a town name. "
+                "Generate a completely different town."
+            )
+            continue
+
+        visited_places.append(town_name)
+        return response
+
+    return (
+        "Town: Unknown Village\n"
+        "Lore: A quiet settlement awaits your arrival."
+    )
+
 
 def clear_screen():
     input("\nPress Enter to continue...")
@@ -72,6 +158,9 @@ def handle_encounters(hero: Hero):
     encounter = get_random_encounter(hero)
     print(f'You have encountered {encounter}')
     print(f"Your current Gold: {hero.gold}")
+    print(generate_town_lore())
+
+    
     match encounter:
         case "Innkeeper":
             innkeeper_encounter(hero)
@@ -81,6 +170,8 @@ def handle_encounters(hero: Hero):
             huntsman_encounter(hero)
         case "Enemy":
             enemy_encounter(hero)
+        case "Peasant":
+            peasant_encounter(hero)
         case _:
             print(f"{hero.get_name()} avoids the town")
     
