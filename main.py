@@ -24,29 +24,44 @@ if not api_key:
     raise ValueError("OPENROUTER_API_KEY was not found in .env")
 
 def openrouter_interaction(query: str):
+    try:
+        with OpenRouter(api_key=api_key) as client:
+            response = client.chat.send(
+                model="openrouter/free",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are the Dungeon Master of a fantasy "
+                            "adventure. Write immersive, original descriptions."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": query
+                    }
+                ],
+                temperature=0.8,
+                max_tokens=200,
+                stream=False
+            )
 
-    with OpenRouter(api_key=api_key) as client:
-        response = client.chat.send(
-            model="openrouter/free",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are the Dungeon Master of a fantasy adventure. Write immersive, original descriptions."
-                }, 
-                {
-                    "role": "user",
-                    "content": query
-                }
-            ],
-            temperature=0.8,
-            max_tokens=200,
-            stream=False
-        )
+            return response.choices[0].message.content
 
-        return response.choices[0].message.content
+    except Exception as e:
+        print(f"\n[Warning] Town generation failed: {e}")
+        return None
+
 
 def generate_town_lore():
     visited = ", ".join(visited_places) if visited_places else "None"
+
+    fallback = (
+        "Town: Unknown Village\n"
+        "Lore: A quiet settlement stands along the road. "
+        "Its weary inhabitants go about their business, "
+        "and the village holds secrets yet to be discovered."
+    )
 
     query = f"""
     Generate a new town for a fantasy DnD adventure.
@@ -66,36 +81,51 @@ def generate_town_lore():
     for _ in range(3):
         response = openrouter_interaction(query)
 
+        if not isinstance(response, str) or not response.strip():
+            continue
+
         town_line = next(
-            (line for line in response.splitlines()
-             if line.strip().lower().startswith("town:")),
+            (
+                line.strip()
+                for line in response.splitlines()
+                if line.strip().lower().startswith("town:")
+            ),
             None
         )
 
-        if town_line is None:
+        lore_line = next(
+            (
+                line.strip()
+                for line in response.splitlines()
+                if line.strip().lower().startswith("lore:")
+            ),
+            None
+        )
+
+        if not town_line or not lore_line:
             continue
 
         town_name = town_line.split(":", 1)[1].strip()
+        lore = lore_line.split(":", 1)[1].strip()
 
-        if not town_name:
+        if not town_name or not lore:
             continue
 
         if town_name.casefold() in {
             place.casefold() for place in visited_places
         }:
             query += (
-                "\nYour previous response reused a town name. "
-                "Generate a completely different town."
+                "\nYour previous response reused a town name "
+                "or an invalid format. Try a completely different "
+                "town and follow the required format exactly."
             )
             continue
 
         visited_places.append(town_name)
-        return response
 
-    return (
-        "Town: Unknown Village\n"
-        "Lore: A quiet settlement awaits your arrival."
-    )
+        return f"Town: {town_name}\nLore: {lore}"
+
+    return fallback
 
 
 def clear_screen():
