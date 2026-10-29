@@ -18,8 +18,8 @@ class Weapon(Enum):
     OAK_STAFF = ("Oak Staff", 9, "Mage", 250)
     ARCANE_SCEPTRE = ("Arcane Sceptre", 13, "Mage", 500)
 
-    def __init__(self, display_name: str, damage: int, hero_class: str, weapon_cost: str):
+    def __init__(self, display_name: str, damage: int, hero_class: str, price: str):
         self.display_name = display_name
         self.damage = damage
         self.hero_class = hero_class
-        self.weapon_cost = weapon_cost
+        self.price = price

@@ -10,6 +10,8 @@ from enemies.templates import spawn_enemy
 from utils.monster_art import ASCII_ART
 from utils.display import show_status
 from adventure.quest import PeasantQuest
+from core.armour import Armour
+from core.weapons import Weapon
 
 ENCOUNTER_TYPES = {
     "Innkeeper": 10,
@@ -188,7 +190,138 @@ def merchant_encounter(hero: Hero):
             print("The merchant tells you to stop wasting his time and walks away spitting next to your foot.")
 
 def blacksmith_encounter(hero: Hero):
-    pass
+    available_weapons = [
+        weapon for weapon in Weapon
+        if weapon.hero_class == hero.__class__.__name__
+    ]
+
+    available_armour = [
+        armour for armour in Armour
+        if armour.hero_class == hero.__class__.__name__
+    ]
+
+    print("\nYou feel a burst of heat as you enter a blacksmith's forge.")
+    print('"Welcome, adventurer! Looking to upgrade your equipment?"')
+
+    while True:
+        print("\n========== BLACKSMITH ==========")
+        print(f"Gold: {hero.gold}")
+        print(f"Current weapon: {hero._weapon.display_name}")
+        print(f"Current armour: {hero._armour.display_name}")
+        print("\n1. Browse weapons")
+        print("2. Browse armour")
+        print("3. Leave")
+
+        choice = input("What would you like to do? ").strip()
+
+        if choice == "1":
+            print("\n========== WEAPONS ==========")
+
+            for index, weapon in enumerate(available_weapons, start=1):
+                equipped = " (Equipped)" if weapon == hero._weapon else ""
+                print(
+                    f"{index}. {weapon.display_name} | "
+                    f"Damage: {weapon.damage} | "
+                    f"Price: {weapon.price} gold{equipped}"
+                )
+
+            print("0. Back")
+
+            try:
+                selection = int(input("Choose a weapon: "))
+            except ValueError:
+                print("Please enter a valid number.")
+                continue
+
+            if selection == 0:
+                continue
+
+            if not 1 <= selection <= len(available_weapons):
+                print("Invalid selection.")
+                continue
+
+            weapon = available_weapons[selection - 1]
+
+            if weapon == hero._weapon:
+                print("You already have this weapon equipped.")
+                continue
+
+            if weapon.damage <= hero._weapon.damage:
+                print("That weapon isn't an upgrade over your current weapon.")
+                continue
+
+            if hero.gold < weapon.price:
+                print("You don't have enough gold.")
+                continue
+
+            confirm = input(
+                f"Buy {weapon.display_name} for {weapon.price} gold? (y/n): "
+            ).strip().lower()
+
+            if confirm == "y":
+                hero.gold -= weapon.price
+                hero._weapon = weapon
+                print(f"You purchased and equipped {weapon.display_name}!")
+            else:
+                print("Purchase cancelled.")
+
+        elif choice == "2":
+            print("\n========== ARMOUR ==========")
+
+            for index, armour in enumerate(available_armour, start=1):
+                equipped = " (Equipped)" if armour == hero._armour else ""
+                print(
+                    f"{index}. {armour.display_name} | "
+                    f"Defence: {armour.defence} | "
+                    f"Price: {armour.price} gold{equipped}"
+                )
+
+            print("0. Back")
+
+            try:
+                selection = int(input("Choose a piece of armour: "))
+            except ValueError:
+                print("Please enter a valid number.")
+                continue
+
+            if selection == 0:
+                continue
+
+            if not 1 <= selection <= len(available_armour):
+                print("Invalid selection.")
+                continue
+
+            armour = available_armour[selection - 1]
+
+            if armour == hero._armour:
+                print("You already have this armour equipped.")
+                continue
+
+            if armour.defence <= hero._armour.defence:
+                print("That armour isn't an upgrade over your current armour.")
+                continue
+
+            if hero.gold < armour.price:
+                print("You don't have enough gold.")
+                continue
+
+            confirm = input(
+                f"Buy {armour.display_name} for {armour.price} gold? (y/n): "
+            ).strip().lower()
+
+            if confirm == "y":
+                hero.gold -= armour.price
+                hero._armour = armour
+                print(f"You purchased and equipped {armour.display_name}!")
+            else:
+                print("Purchase cancelled.")
+
+        elif choice == "3":
+            print('"May your blade stay sharp and your armour hold firm!"')
+            break
+
+        else:
+            print("Invalid choice. Please choose 1, 2, or 3.")
 
 def sell_junk(hero: Hero, price_mul: float):
     if not hero.junk_inventory:

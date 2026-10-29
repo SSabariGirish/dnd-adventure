@@ -8,7 +8,7 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
-from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter
+from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter, blacksmith_encounter
 from enemies.templates import spawn_enemy
 
 #from google import genai
@@ -202,6 +202,8 @@ def handle_encounters(hero: Hero):
             enemy_encounter(hero)
         case "Peasant":
             peasant_encounter(hero)
+        case "Blacksmith":
+            blacksmith_encounter(hero)
         case _:
             print(f"{hero.get_name()} avoids the town")
     

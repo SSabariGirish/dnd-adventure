@@ -18,8 +18,8 @@ class Armour(Enum):
     ENCHANTED_ROBES = ("Enchanted Robes", 2, "Mage", 250)
     ARCHMAGES_MANTLE = ("Archmage's Mantle", 3, "Mage", 500)
 
-    def __init__(self, display_name: str, defence: int, hero_class: str, armour_cost: int):
+    def __init__(self, display_name: str, defence: int, hero_class: str, price: int):
         self.display_name = display_name
         self.defence = defence
         self.hero_class = hero_class
-        self.armour_cost = armour_cost
+        self.price = price
