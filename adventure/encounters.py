@@ -15,9 +15,11 @@ ENCOUNTER_TYPES = {
     "Innkeeper": 10,
     "Merchant": 10,
     "Huntsman": 10,
+    "Blacksmith": 10,
     "Peasant": 15,
-    "Enemy": 55
+    "Enemy": 45
 }
+
 LIST_OF_ENEMIES = ["Goblin", "Gnoll", "Wolf", "Bandit", "Skeleton",
                    "Orc", "Dire Wolf", "Cultist", "Ogre", "Wraith",
                    "Troll", "Wyvern", "Griffin", "Archgriffin"]
@@ -184,6 +186,9 @@ def merchant_encounter(hero: Hero):
             print("You admire the merchant's wares but decide not to purchase anything.")
         case _:
             print("The merchant tells you to stop wasting his time and walks away spitting next to your foot.")
+
+def blacksmith_encounter(hero: Hero):
+    pass
 
 def sell_junk(hero: Hero, price_mul: float):
     if not hero.junk_inventory:

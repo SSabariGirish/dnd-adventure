@@ -192,7 +192,7 @@ class Hero:
         """
         pass
 
-    def attack(self, target) ->  bool: # 'target' will be another Entity/Hero
+    def attack(self, target) ->  bool:
         """Calculates damage and applies it to the target's take_damage method."""
         pass
 
