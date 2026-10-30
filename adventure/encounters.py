@@ -267,7 +267,7 @@ def blacksmith_encounter(hero: Hero):
             if confirm == "y":
                 hero.gold -= weapon.price
                 hero._weapon = weapon
-                print(f"You purchased and equipped {weapon.display_name}!")
+                print(f"You have purchased and equipped {weapon.display_name}!")
             else:
                 print("Purchase cancelled.")
 
@@ -323,11 +323,13 @@ def blacksmith_encounter(hero: Hero):
                 print("Purchase cancelled.")
 
         elif choice == "3":
+            print("The blacksmith thanks you for your time and mutters a soft prayer on your behalf")
             print('"May your blade stay sharp and your armour hold firm!"')
             break
 
         else:
-            print("Invalid choice. Please choose 1, 2, or 3.")
+            print("The blacksmith thinks you have gone crazy and shows you the way out of his forge")
+            break
 
 def sell_junk(hero: Hero, price_mul: float):
     if not hero.junk_inventory:
