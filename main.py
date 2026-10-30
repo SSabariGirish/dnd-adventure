@@ -8,7 +8,7 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
-from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter, blacksmith_encounter
+from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter, blacksmith_encounter, boss_encounter
 from enemies.templates import spawn_enemy
 
 #from google import genai
@@ -185,10 +185,18 @@ def create_hero() -> list:
     
 
 def handle_encounters(hero: Hero):
+    
+    level_checker = hero.level // 5
+    if hero.bosses_faced < level_checker:
+        boss_encounter(hero, hero.level)
+        hero.bosses_faced += 1
+        return
+
     encounter = get_random_encounter(hero)
     print(f'You have encountered {encounter}')
     print(f"Your current Gold: {hero.gold}")
-    print(generate_town_lore())
+    
+    #print(generate_town_lore())
 
     
     match encounter:
@@ -232,9 +240,17 @@ def main():
     print(hero)
     clear_screen()
 
-    while hero.is_alive():
+    while hero.is_alive() and not getattr(hero, "game_completed", False):
         handle_encounters(hero)
-        clear_screen()
+
+        if hero.is_alive() and not getattr(hero, "game_completed", False):
+            clear_screen()
+
+    if not hero.is_alive():
+        print("\nGAME OVER")
+
+    elif hero.game_completed:
+        print("\nThank you for playing!")
 
 if __name__=="__main__":
     main()

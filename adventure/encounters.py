@@ -425,7 +425,8 @@ def boss_encounter(hero: Hero, boss_level: int) -> bool:
     if drop:
         hero.junk_inventory[drop] = hero.junk_inventory.get(drop, 0) + 1
         print(f"You obtained: {drop}")
-    pass
+
+    return True
 
 def clear_screen():
     input("\nPress Enter to continue...")
@@ -518,6 +519,7 @@ def enemy_encounter(hero: Hero):
         return
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+    previous_level = hero.level
     hero.xp += cur_enemy.get_xp_reward()
     for quest in hero.quests:
         ans = quest.record_kill(cur_enemy.get_name())
