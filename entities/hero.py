@@ -76,7 +76,7 @@ class Hero:
     def verify_level_up(self) -> bool:
         cumulative_xp =  self.get_next_level_xp(self.level)
         level_up = False
-        while self.xp > cumulative_xp:
+        while self.xp >= cumulative_xp:
             print("LEVEL UP!!!")
             level_up = True
             self.level += 1
