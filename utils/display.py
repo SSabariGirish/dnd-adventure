@@ -1,4 +1,5 @@
 from entities.hero import Hero
+from entities.enemy import Enemy
 
 def display_bar(current: int, maximum: int, width: int = 20) -> str:
 
@@ -10,6 +11,17 @@ def display_bar(current: int, maximum: int, width: int = 20) -> str:
     empty = width - filled
     bar = "█" * filled + "░" * empty
     return bar
+
+
+def show_enemy_health(enemy: Enemy):
+    bar_length = 25
+
+    current_hp = enemy._cur_health
+    max_hp = enemy.get_max_health()
+
+    hp_bar = display_bar(current_hp, max_hp, bar_length)
+    print(f"\n{enemy.get_name()}")
+    print(f"HP: [{hp_bar}] {current_hp}/{max_hp}")
 
 def show_status(hero: Hero) -> str:
     return f"""

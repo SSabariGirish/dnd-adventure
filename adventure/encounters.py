@@ -8,7 +8,7 @@ from entities.mage import Mage
 from entities.rogue import Rogue
 from enemies.templates import spawn_enemy, spawn_boss
 from utils.monster_art import ASCII_ART, BOSS_ART
-from utils.display import show_status
+from utils.display import show_status, show_enemy_health
 from adventure.quest import PeasantQuest
 from core.armour import Armour
 from core.weapons import Weapon
@@ -90,9 +90,10 @@ def ask_about_rumours(hero: Hero):
         print("\nYou decide not to pursue the conversation. You have a pint at the inn and leave")
 
 def show_quests(hero: Hero):
+    print(f"A pint in hand and home cooked meal in front of them, {hero.get_name()} thinks of requests they've received from peasants.")
     print("\n========== CURRENT QUESTS ==========")
     if not hero.quests:
-        print(f"{hero.get_name()} thinks of their future conquests as they are yet to receive requests from peasants.")
+        print(f"{hero.get_name()} eats and drinks in peace, as to their knowledge, no village is being troubled by monsters.")
         return
     
     for quest in hero.quests:
@@ -461,6 +462,7 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
     while hero.is_alive() and enemy.is_alive():
         current_status = show_status(hero)
         print(current_status)
+        show_enemy_health(enemy)
 
         try:
             action_choice = get_player_action(hero)
