@@ -21,6 +21,8 @@ class Hero:
         self.junk_inventory = {}
         self.gold = 0
         self.attack_modifier = 1.0
+        self.game_completed = False
+        self.bosses_faced = 0
         self.quests: list[PeasantQuest] = []
 
 
@@ -76,7 +78,7 @@ class Hero:
     def verify_level_up(self) -> bool:
         cumulative_xp =  self.get_next_level_xp(self.level)
         level_up = False
-        while self.xp > cumulative_xp:
+        while self.xp >= cumulative_xp:
             print("LEVEL UP!!!")
             level_up = True
             self.level += 1

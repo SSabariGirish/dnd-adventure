@@ -6,8 +6,8 @@ from entities.enemy import Enemy
 from entities.knight import Knight
 from entities.mage import Mage
 from entities.rogue import Rogue
-from enemies.templates import spawn_enemy
-from utils.monster_art import ASCII_ART
+from enemies.templates import spawn_enemy, spawn_boss
+from utils.monster_art import ASCII_ART, BOSS_ART
 from utils.display import show_status
 from adventure.quest import PeasantQuest
 from core.armour import Armour
@@ -41,6 +41,12 @@ JUNK_PRICES = {
     "Wyvern Scale": 100,
     "Griffin Feather": 175,
     "Archgriffin Talon": 300,
+    "Goblin King's Crown": 120,
+    "Champion's Blade": 250,
+    "Warlord's Armour": 350,
+    "Lich's Phylactery": 500,
+    "Ancient Wyvern Heart": 750,
+    "Fiend's Crest": 1000
 }
 
 def roll_check(stat: int, target: int) -> bool:
@@ -395,6 +401,33 @@ def huntsman_encounter(hero: Hero):
         case _:
             print("\nThe huntsman dismisses you as a madman and leaves, muttering a prayer to himself.")
 
+def boss_encounter(hero: Hero, boss_level: int) -> bool:
+    boss = spawn_boss(boss_level)
+
+    boss_art = BOSS_ART.get(boss.get_name().lower())
+
+    if boss_art:
+        print(boss_art + "\n")
+
+    while hero.is_alive() and boss.is_alive():
+        combat(hero, boss)
+    
+    if not hero.is_alive():
+        print(f"\n{hero.get_name()} has fallen before {boss.get_name()}!")
+        return False
+    
+    print(f"\n{boss.get_name()} has been defeated!")
+    print(f"{hero.get_name()} earned {boss.get_xp_reward()} XP!")
+
+    hero.xp += boss.get_xp_reward()
+    drop = boss.get_drop_reward()
+
+    if drop:
+        hero.junk_inventory[drop] = hero.junk_inventory.get(drop, 0) + 1
+        print(f"You obtained: {drop}")
+
+    return True
+
 def clear_screen():
     input("\nPress Enter to continue...")
     os.system("cls" if os.name == "nt" else "clear")
@@ -486,6 +519,7 @@ def enemy_encounter(hero: Hero):
         return
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
+    previous_level = hero.level
     hero.xp += cur_enemy.get_xp_reward()
     for quest in hero.quests:
         ans = quest.record_kill(cur_enemy.get_name())
