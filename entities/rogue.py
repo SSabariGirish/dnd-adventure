@@ -7,16 +7,16 @@ import random
 class Rogue(Hero):
 
     def __init__(self, species: Species, name: str):
-        super().__init__(species, name, Weapon.IRON_DAGGER, Armour.LEATHER_ARMOUR, 75)
-        self._evasion = 0.20
+        super().__init__(species, name, Weapon.IRON_DAGGER, Armour.LEATHER_ARMOUR, 85)
+        self._evasion = 0.25
         self._stance = "MELEE"
         self.set_stats()
     
     def set_stats(self):
         self.cur_health = self._max_health
-        self.strength += 3
+        self.strength += 4
         self.intelligence += 4
-        self.dexterity += 8
+        self.dexterity += 10
         self.deception += 5
         self._max_mana = 20 + (self.intelligence * 2)
         self.cur_mana = self._max_mana
@@ -32,7 +32,10 @@ class Rogue(Hero):
                 return False
         
         self.cur_mana -= mana_cost
-        self._evasion = 0.40
+        if self._stance == "MELEE":
+            self._evasion = 0.40
+        else:
+            self._stance = 0.65
 
         print(f"{self._name} has become more nimble")
         return True
@@ -49,39 +52,42 @@ class Rogue(Hero):
         if self._stance == 'MELEE':
             return self._weapon.damage + self.strength
         else:
-            return 5
+            return (self._weapon.damage // 4) + self.dexterity
 
     def switch_stance(self) -> bool:
-        if self._stance == 'MELEE':
-            self._stance = 'RANGED'
-            if self._evasion == 0.40:
-                self._evasion = 0.70
+        if self._stance == "MELEE":
+            self._stance = "RANGED"
+            if self._evasion == 0.45:
+                self._evasion = 0.65
             else:
-                self._evasion = 0.35
+                self._evasion = 0.40 # From 25%, it is increased to 40%
         else:
-            self._stance = 'MELEE'
-            if self._evasion == 0.70:
-                self._evasion = 0.40
+            self._stance = "MELEE"
+            if self._evasion == 0.65:
+                self._evasion = 0.45
             else:
-                self._evasion = 0.2
+                self._evasion = 0.25 #From 40%, down to 25%
         return True
             
     
     def attack(self, target: Hero):
-        if self._evasion == 0.4:
-            self._evasion = 0.20
+        if self._stance == "MELEE":
+            self._evasion = 0.25
         else:
-            self._evasion = 0.35
+            self._evasion = 0.40
+
         damage = self.calculate_damage() * self.attack_modifier
+
         print(f"{self._name} slices at {target.get_name()}")
         target.take_damage(damage)
+
         self.attack_modifier = 1.0
         return True
 
     def verify_level_up(self):
         level_up = super().verify_level_up()
         if level_up:
-            self._max_health += 7
+            self._max_health += 8
             self.cur_health = self._max_health
             self._max_mana += 8
             self.cur_mana = self._max_mana
