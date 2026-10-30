@@ -270,16 +270,16 @@ BOSS_TEMPLATES = {
     ),
 
     30: EnemyTemplate(
-        name="The Archgriffin",
+        name="The Fiend",
         max_health=800,
         damage=55,
         defence=22,
         xp_reward=1500,
-        drop_reward="Archgriffin's Crest"
+        drop_reward="Fiend's Crest"
     ),
 
     35: EnemyTemplate(
-        name="The Devourer",
+        name="The Ancient Devourer",
         max_health=1200,
         damage=70,
         defence=25,
@@ -300,6 +300,26 @@ def get_spawn_weights(level: int) -> dict[str, dict[str, int]]:
         return SPAWN_WEIGHTS[(8, 10)]
     else:
         return SPAWN_WEIGHTS[(11, 9999)]
+
+
+def spawn_boss(level: int) -> Enemy:
+    if level not in BOSS_TEMPLATES:
+        raise ValueError(f"No boss exists for level {level}")
+
+    boss = BOSS_TEMPLATES[level]
+
+    print(f"\n{'=' * 45}")
+    print(f"A POWERFUL FOE APPROACHES: {boss.name.upper()}!")
+    print(f"{'=' * 45}\n")
+
+    return Enemy(
+        name=boss.name,
+        max_health=boss.max_health,
+        damage=boss.damage,
+        defence=boss.defence,
+        xp_reward=boss.xp_reward,
+        drop_reward=boss.drop_reward
+    )
 
 def spawn_enemy(level:int) -> Enemy:
     enemy_dict = get_spawn_weights(level)
