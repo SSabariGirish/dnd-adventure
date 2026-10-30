@@ -89,6 +89,22 @@ def ask_about_rumours(hero: Hero):
     else:
         print("\nYou decide not to pursue the conversation. You have a pint at the inn and leave")
 
+def show_quests(hero: Hero):
+    print("\n========== CURRENT QUESTS ==========")
+    if not hero.quests:
+        print(f"{hero.get_name()} thinks of their future conquests as they are yet to receive requests from peasants.")
+        return
+    
+    for quest in hero.quests:
+        if quest.completed:
+            continue
+
+        print(f"\nTarget: {quest.monster_name}")
+        print(f"Progress: {quest.current_kills}/{quest.required_kills}")
+        print('\n')
+
+    print("\n====================================")
+        
 def innkeeper_encounter(hero: Hero):
     print("\nYou enter a small tavern.")
     print("The innkeeper looks up from polishing a glass.")
@@ -102,6 +118,7 @@ def innkeeper_encounter(hero: Hero):
     match choice:
         case "1":
             ask_about_rumours(hero)
+            show_quests(hero)
         case "2":
             if hero.gold < 25:
                 print(f"{hero.get_name()} does not have enough Gold to rent a room")
@@ -111,6 +128,7 @@ def innkeeper_encounter(hero: Hero):
                 print(f"{hero.get_name()} spends the night resting and recover some health and mana.")
                 hero.heal(int(0.2 * hero.get_max_health()))
                 hero.restore_mana(int(0.2 * hero.get_max_mana()))
+            show_quests(hero)
         case "3":
             print(f"{hero.get_name()} finds no reason to visit the tavern and goes on their own way")
         case _:
