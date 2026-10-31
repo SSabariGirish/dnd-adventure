@@ -13,11 +13,19 @@ from adventure.quest import PeasantQuest
 
 SAVE_FILE = "save.json"
 
-def save_game(save_data: dict):
+def save_game(hero):
+    save_data = hero_to_dict(hero)
+
+    try:
+        json.dumps(save_data)
+    except TypeError as e:
+        print("JSON serialisation error:", e)
+        raise
+
     with open(SAVE_FILE, "w") as file:
         json.dump(save_data, file, indent=4)
 
-    print("Game Saved Successfully!")
+    print("Game saved successfully!")
 
 def hero_to_dict(hero: Hero) -> dict:
     save_data = {
@@ -85,3 +93,82 @@ def hero_to_dict(hero: Hero) -> dict:
         }
 
     return save_data
+
+def load_game():
+    try:
+        with open(SAVE_FILE, "r") as file:
+            save_data = json.load(file)
+
+    except FileNotFoundError:
+        print("No save file found.")
+        return None
+
+    character = save_data["character"]
+    stats = save_data["stats"]
+    equipment = save_data["equipment"]
+
+    hero_classes = {
+        "Knight": Knight,
+        "Mage": Mage,
+        "Rogue": Rogue
+    }
+
+    hero_class = hero_classes[character["class"]]
+    species = Species[character["species"]]
+
+    hero = hero_class(species, character["name"])
+
+    hero.level = character["level"]
+    hero.xp = character["xp"]
+    hero.gold = character["gold"]
+
+    hero.cur_health = stats["health"]
+    hero._max_health = stats["max_health"]
+    hero.cur_mana = stats["mana"]
+    hero._max_mana = stats["max_mana"]
+
+    hero.strength = stats["strength"]
+    hero.intelligence = stats["intelligence"]
+    hero.dexterity = stats["dexterity"]
+    hero.deception = stats["deception"]
+
+    hero._weapon = Weapon[equipment["weapon"]]
+    hero._armour = Armour[equipment["armour"]]
+
+    inventory = save_data["inventory"]
+
+    hero.healing_potion_inventory = inventory["healing_potions"]
+    hero.mana_potion_inventory = inventory["mana_potions"]
+    hero.junk_inventory = inventory["junk"]
+
+    hero.quests = []
+
+    for quest_data in save_data["quests"]:
+        quest = PeasantQuest(
+            quest_data["monster_name"],
+            quest_data["required_kills"],
+            quest_data["xp_reward"],
+            quest_data["gold_reward"]
+        )
+
+        quest.current_kills = quest_data["current_kills"]
+        quest.completed = quest_data["completed"]
+
+        hero.quests.append(quest)
+
+    game_state = save_data["game_state"]
+    hero.game_completed = game_state["game_completed"]
+    hero.bosses_faced = game_state["bosses_faced"]
+
+    class_state = save_data.get("class_state", {})
+
+    if isinstance(hero, Knight):
+        hero._shield_active = class_state.get("shield_active", False)
+
+    elif isinstance(hero, Rogue):
+        hero._stance = class_state.get("stance", "MELEE")
+        hero._evasion = class_state.get("evasion", 0.25)
+
+    print(f"\nWelcome back, {hero.get_name()}!")
+
+    return hero

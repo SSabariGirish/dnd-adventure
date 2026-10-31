@@ -9,6 +9,7 @@ from entities.rogue import Rogue
 from enemies.templates import spawn_enemy, spawn_boss
 from utils.monster_art import ASCII_ART, BOSS_ART
 from utils.display import show_status, show_enemy_health
+from utils.save_system import save_game
 from adventure.quest import PeasantQuest
 from core.armour import Armour
 from core.weapons import Weapon
@@ -114,6 +115,7 @@ def innkeeper_encounter(hero: Hero):
     print("1) Ask about rumours")
     print("2) Spend the night at the inn")
     print("3) Leave town")
+    print("4) Save Game")
 
     choice = input('\nMake a decision: ')
     match choice:
@@ -132,6 +134,9 @@ def innkeeper_encounter(hero: Hero):
             show_quests(hero)
         case "3":
             print(f"{hero.get_name()} finds no reason to visit the tavern and goes on their own way")
+        case "4":
+            save_game(hero)
+            print(f"{hero.get_name()} has taken a sip of Saviour Schnapp")
         case _:
             print("The innkeeper kicks you out of the inn, fearing that you're a spy from the neighbouring kingdom")
 
@@ -514,7 +519,7 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("4) CONSUME MANA ELIXIR")
     print("5) SEE INVENTORY")
     if isinstance(hero, Rogue):
-        print(f"6) SWITCH STANCE - (current stance = {hero.get_stance()})")
+        print(f"6) SWITCH STANCE - (current stance = {hero._stance()})")
 
     choice = int(input("Choose your action\n"))
     if isinstance(hero, Rogue):
@@ -541,7 +546,6 @@ def enemy_encounter(hero: Hero):
         return
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
-    previous_level = hero.level
     hero.xp += cur_enemy.get_xp_reward()
     for quest in hero.quests:
         ans = quest.record_kill(cur_enemy.get_name())

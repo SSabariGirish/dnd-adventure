@@ -1,0 +1,47 @@
+{
+    "save_version": 1,
+    "character": {
+        "name": "KOL",
+        "class": "Knight",
+        "species": "HUMAN",
+        "level": 1,
+        "xp": 18,
+        "gold": 0
+    },
+    "stats": {
+        "health": 90,
+        "max_health": 100,
+        "mana": 18,
+        "max_mana": 18,
+        "strength": 10,
+        "intelligence": 4,
+        "dexterity": 6,
+        "deception": 6
+    },
+    "equipment": {
+        "weapon": "IRON_BROADSWORD",
+        "armour": "IRON_CHAINMAIL"
+    },
+    "inventory": {
+        "healing_potions": [
+            "Minor Healing Draught",
+            "Minor Healing Draught"
+        ],
+        "mana_potions": [
+            "Minor Arcane Elixir",
+            "Minor Arcane Elixir"
+        ],
+        "junk": {
+            "Gnoll Fang": 1,
+            "Goblin Ear": 1
+        }
+    },
+    "quests": [],
+    "game_state": {
+        "game_completed": false,
+        "bosses_faced": 0
+    },
+    "class_state": {
+        "shield_block": false
+    }
+}
