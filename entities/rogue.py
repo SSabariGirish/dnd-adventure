@@ -35,7 +35,7 @@ class Rogue(Hero):
         if self._stance == "MELEE":
             self._evasion = 0.40
         else:
-            self._stance = 0.65
+            self._evasion = 0.65
 
         print(f"{self._name} has become more nimble")
         return True
@@ -85,15 +85,19 @@ class Rogue(Hero):
         return True
 
     def verify_level_up(self):
+        old_level = self.level
         level_up = super().verify_level_up()
+        
         if level_up:
-            self._max_health += 8
+            levels_gained = self.level - old_level
+
+            self._max_health += 8 * levels_gained
             self.cur_health = self._max_health
-            self._max_mana += 8
+            self._max_mana += 8 * levels_gained
             self.cur_mana = self._max_mana
-            self.strength += 1
-            self.dexterity += 3
-            self.deception += 2
+            self.strength += levels_gained
+            self.dexterity += 3 * levels_gained
+            self.deception += 2 * levels_gained
     
     def __str__(self) -> str:
         """Returns a formatted character sheet for the CLI."""

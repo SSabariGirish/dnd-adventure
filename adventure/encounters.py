@@ -8,7 +8,8 @@ from entities.mage import Mage
 from entities.rogue import Rogue
 from enemies.templates import spawn_enemy, spawn_boss
 from utils.monster_art import ASCII_ART, BOSS_ART
-from utils.display import show_status
+from utils.display import show_status, show_enemy_health
+from utils.save_system import save_game
 from adventure.quest import PeasantQuest
 from core.armour import Armour
 from core.weapons import Weapon
@@ -89,6 +90,23 @@ def ask_about_rumours(hero: Hero):
     else:
         print("\nYou decide not to pursue the conversation. You have a pint at the inn and leave")
 
+def show_quests(hero: Hero):
+    print(f"A pint in hand and home cooked meal in front of them, {hero.get_name()} thinks of requests they've received from peasants.")
+    print("\n========== CURRENT QUESTS ==========")
+    if not hero.quests:
+        print(f"{hero.get_name()} eats and drinks in peace, as to their knowledge, no village is being troubled by monsters.")
+        return
+    
+    for quest in hero.quests:
+        if quest.completed:
+            continue
+
+        print(f"\nTarget: {quest.monster_name}")
+        print(f"Progress: {quest.current_kills}/{quest.required_kills}")
+        print('\n')
+
+    print("\n====================================")
+        
 def innkeeper_encounter(hero: Hero):
     print("\nYou enter a small tavern.")
     print("The innkeeper looks up from polishing a glass.")
@@ -97,11 +115,13 @@ def innkeeper_encounter(hero: Hero):
     print("1) Ask about rumours")
     print("2) Spend the night at the inn")
     print("3) Leave town")
+    print("4) Save Game")
 
     choice = input('\nMake a decision: ')
     match choice:
         case "1":
             ask_about_rumours(hero)
+            show_quests(hero)
         case "2":
             if hero.gold < 25:
                 print(f"{hero.get_name()} does not have enough Gold to rent a room")
@@ -111,8 +131,12 @@ def innkeeper_encounter(hero: Hero):
                 print(f"{hero.get_name()} spends the night resting and recover some health and mana.")
                 hero.heal(int(0.2 * hero.get_max_health()))
                 hero.restore_mana(int(0.2 * hero.get_max_mana()))
+            show_quests(hero)
         case "3":
             print(f"{hero.get_name()} finds no reason to visit the tavern and goes on their own way")
+        case "4":
+            save_game(hero)
+            print(f"{hero.get_name()} has taken a sip of Saviour Schnapp")
         case _:
             print("The innkeeper kicks you out of the inn, fearing that you're a spy from the neighbouring kingdom")
 
@@ -443,6 +467,7 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
     while hero.is_alive() and enemy.is_alive():
         current_status = show_status(hero)
         print(current_status)
+        show_enemy_health(enemy)
 
         try:
             action_choice = get_player_action(hero)
@@ -494,7 +519,7 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("4) CONSUME MANA ELIXIR")
     print("5) SEE INVENTORY")
     if isinstance(hero, Rogue):
-        print(f"6) SWITCH STANCE - (current stance = {hero.get_stance()})")
+        print(f"6) SWITCH STANCE - (current stance = {hero._stance()})")
 
     choice = int(input("Choose your action\n"))
     if isinstance(hero, Rogue):
@@ -521,7 +546,6 @@ def enemy_encounter(hero: Hero):
         return
             
     print(f"\n{cur_enemy.get_name()} has been slain by {hero.get_name()}")
-    previous_level = hero.level
     hero.xp += cur_enemy.get_xp_reward()
     for quest in hero.quests:
         ans = quest.record_kill(cur_enemy.get_name())

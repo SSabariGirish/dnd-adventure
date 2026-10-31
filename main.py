@@ -8,6 +8,7 @@ from entities.enemy import Enemy
 from core.enums import Species
 from utils.display import show_status
 from utils.monster_art import ASCII_ART
+from utils.save_system import load_game
 from adventure.encounters import get_random_encounter, innkeeper_encounter, merchant_encounter, huntsman_encounter, enemy_encounter, peasant_encounter, blacksmith_encounter, boss_encounter
 from enemies.templates import spawn_enemy
 
@@ -51,7 +52,6 @@ def openrouter_interaction(query: str):
     except Exception as e:
         print(f"\n[Warning] Town generation failed: {e}")
         return None
-
 
 def generate_town_lore():
     visited = ", ".join(visited_places) if visited_places else "None"
@@ -220,22 +220,55 @@ def handle_encounters(hero: Hero):
                     
 
 def main():
-    invalid = True
-    while invalid:
+    hero = None
+
+    while hero is None:
+        print("================================")
+        print("          DND ADVENTURE")
+        print("================================")
+        print("1. New Game")
+        print("2. Load Game")
+        print("3. Exit")
+
         try:
-            choices = create_hero()
-            invalid = False
-        except ValueError as v:
-            print(v)
+            choice = int(input("\nChoose an option: "))
+
+            match choice:
+                case 1:
+                    invalid = True
+
+                    while invalid:
+                        try:
+                            choices = create_hero()
+                            invalid = False
+                        except ValueError as v:
+                            print(v)
+                            clear_screen()
+
+                    match choices[2]:
+                        case 'Knight':
+                            hero = Knight(choices[1], choices[0])
+                        case 'Rogue':
+                            hero = Rogue(choices[1], choices[0])
+                        case 'Mage':
+                            hero = Mage(choices[1], choices[0])
+
+                case 2:
+                    hero = load_game()
+
+                case 3:
+                    print("Thanks for playing!")
+                    return
+
+                case _:
+                    print("Invalid option. Try again.")
+
+        except ValueError:
+            print("Please enter a valid number.")
+
+        if hero is None:
             clear_screen()
 
-    match choices[2]:
-        case 'Knight':
-            hero = Knight(choices[1], choices[0])
-        case 'Rogue':
-            hero = Rogue(choices[1], choices[0])
-        case 'Mage':
-            hero = Mage(choices[1], choices[0])
     clear_screen()
     print(hero)
     clear_screen()
