@@ -519,7 +519,7 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("4) CONSUME MANA ELIXIR")
     print("5) SEE INVENTORY")
     if isinstance(hero, Rogue):
-        print(f"6) SWITCH STANCE - (current stance = {hero._stance()})")
+        print(f"6) SWITCH STANCE - (current stance = {hero._stance})")
 
     choice = int(input("Choose your action\n"))
     if isinstance(hero, Rogue):
