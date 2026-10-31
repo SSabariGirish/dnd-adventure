@@ -108,7 +108,7 @@ dnd-adventure/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.9 or later.
+- Python 3.12 or later.
 - An OpenRouter API key for AI-generated town lore.
 
 ### Installation
