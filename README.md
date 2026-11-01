@@ -103,9 +103,7 @@ dnd-adventure/
 └── README.md
 ```
 
-*Note: The structure above represents the main project modules; adjust filenames if your local repository differs.*
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.12 or later.
