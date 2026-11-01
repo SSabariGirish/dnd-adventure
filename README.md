@@ -92,6 +92,11 @@ dnd-adventure/
 │   ├── mage.py
 │   └── rogue.py
 │
+├── tests/
+│   ├── test_enemy.py
+│   ├── test_knight.py
+│   ├── test_rogue.py
+│   └── test_mage.py
 ├── utils/
 │   ├── display.py
 │   ├── monster_art.py
@@ -100,6 +105,9 @@ dnd-adventure/
 ├── main.py
 ├── requirements.txt
 ├── .env
+├── .gitignore
+├── run_tests.sh
+├── save.json
 └── README.md
 ```
 
