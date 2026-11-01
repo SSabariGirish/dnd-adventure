@@ -15,10 +15,10 @@ class Enemy(Hero):
         if damage < 0:
             raise ValueError("Damage should not be negative")
 
-        actual_damage = max(
+        actual_damage = int(max(
             0, 
             damage - self._defence
-        )
+        ))
 
         self._cur_health = max(
             0, 

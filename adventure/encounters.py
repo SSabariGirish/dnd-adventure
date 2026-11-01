@@ -436,7 +436,7 @@ def boss_encounter(hero: Hero, boss_level: int) -> bool:
         print(boss_art + "\n")
 
     while hero.is_alive() and boss.is_alive():
-        combat(hero, boss)
+        combat(hero, boss, is_boss=True)
     
     if not hero.is_alive():
         print(f"\n{hero.get_name()} has fallen before {boss.get_name()}!")
@@ -462,7 +462,7 @@ def enemy_turn(hero: Knight | Mage | Rogue, enemy: Enemy):
     enemy.attack(hero)
     clear_screen()
 
-def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
+def combat(hero: Knight | Mage | Rogue, enemy: Enemy, is_boss: bool = False):
 
     while hero.is_alive() and enemy.is_alive():
         current_status = show_status(hero)
@@ -490,6 +490,17 @@ def combat(hero: Knight | Mage | Rogue, enemy: Enemy):
                 case 5:
                     res = hero.get_inventory()
                 case 6:
+                    if is_boss:
+                        print("The boss has trapped you in a decrepit tomb")
+                        print("You cannot escape the boss")
+                    else:
+                        hero.cur_health = hero.cur_health // 2
+                        hero.cur_mana = hero.cur_mana // 2
+                        hero.gold = hero.gold // 2
+                        print(f"{hero.get_name()} has fled from battle!")
+                        print(f"{hero.get_name()} has lost half of their current health, mana and Gold.")
+                        return True
+                case 7:
                     if isinstance(hero, Rogue):
                         res = hero.switch_stance()
                     else:
@@ -518,8 +529,9 @@ def get_player_action(hero: Knight | Mage | Rogue) -> int:
     print("3) CONSUME HEALTH ELIXIR")
     print("4) CONSUME MANA ELIXIR")
     print("5) SEE INVENTORY")
+    print("6) RUN")
     if isinstance(hero, Rogue):
-        print(f"6) SWITCH STANCE - (current stance = {hero._stance})")
+        print(f"7) SWITCH STANCE - (current stance = {hero._stance})")
 
     choice = int(input("Choose your action\n"))
     if isinstance(hero, Rogue):
@@ -540,7 +552,10 @@ def enemy_encounter(hero: Hero):
     enemy_turn(hero, cur_enemy)
 
     while hero.is_alive() and cur_enemy.is_alive(): 
-        combat(hero, cur_enemy)
+        fled = combat(hero, cur_enemy)
+
+        if fled:
+            return
 
     if not hero.is_alive():
         return
